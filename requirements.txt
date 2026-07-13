@@ -1,0 +1,24 @@
+# Driver Drowsiness Detection System - runtime dependencies.
+#
+# Install with:   pip install -r requirements.txt
+#
+# Notes:
+#  * mediapipe needs protobuf 4.x and does NOT get along with TensorFlow in this
+#    environment. We do not depend on TensorFlow at all (the audio model runs on
+#    PyTorch). If TF is already installed and breaks `import mediapipe`, either
+#    `pip uninstall -y tensorflow tensorflow-hub`, or just rely on the bundled
+#    _tf_guard.py which blocks the TF import automatically. See README.md.
+#  * The audio model (panns-inference + sounddevice) is OPTIONAL: without it,
+#    run `python main.py --no-audio` and everything else still works.
+
+opencv-python>=4.8
+mediapipe>=0.10
+numpy>=1.24
+
+# Spoken alerts (offline text-to-speech). Falls back to a beep if unavailable.
+pyttsx3>=2.90
+
+# --- Audio model (optional; needed only without --no-audio) ----------------
+sounddevice>=0.4
+panns-inference>=0.1.1
+torch>=2.0

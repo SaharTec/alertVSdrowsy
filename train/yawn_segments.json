@@ -1,0 +1,1418 @@
+{
+  "Yawning/1-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 387,
+    "yawns": [
+      [
+        34,
+        183
+      ]
+    ]
+  },
+  "Yawning/10-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 633,
+    "yawns": [
+      [
+        0,
+        182
+      ],
+      [
+        335,
+        519
+      ]
+    ]
+  },
+  "Yawning/10-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 434,
+    "yawns": [
+      [
+        42,
+        124
+      ],
+      [
+        199,
+        347
+      ]
+    ]
+  },
+  "Yawning/11-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 594,
+    "yawns": [
+      [
+        150,
+        247
+      ],
+      [
+        318,
+        433
+      ]
+    ]
+  },
+  "Yawning/11-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 770,
+    "yawns": [
+      [
+        290,
+        499
+      ]
+    ]
+  },
+  "Yawning/12-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 836,
+    "yawns": [
+      [
+        147,
+        390
+      ],
+      [
+        529,
+        718
+      ]
+    ]
+  },
+  "Yawning/12-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 980,
+    "yawns": [
+      [
+        187,
+        357
+      ],
+      [
+        599,
+        841
+      ]
+    ]
+  },
+  "Yawning/13-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 647,
+    "yawns": [
+      [
+        207,
+        381
+      ]
+    ]
+  },
+  "Yawning/13-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 213,
+    "yawns": []
+  },
+  "Yawning/14-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 631,
+    "yawns": [
+      [
+        210,
+        443
+      ]
+    ]
+  },
+  "Yawning/15-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 576,
+    "yawns": [
+      [
+        108,
+        273
+      ]
+    ]
+  },
+  "Yawning/15-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 561,
+    "yawns": [
+      [
+        53,
+        203
+      ],
+      [
+        322,
+        480
+      ]
+    ]
+  },
+  "Yawning/16-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 622,
+    "yawns": [
+      [
+        31,
+        199
+      ],
+      [
+        323,
+        469
+      ]
+    ]
+  },
+  "Yawning/17-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 585,
+    "yawns": [
+      [
+        36,
+        166
+      ],
+      [
+        276,
+        422
+      ]
+    ]
+  },
+  "Yawning/17-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 570,
+    "yawns": [
+      [
+        141,
+        295
+      ]
+    ]
+  },
+  "Yawning/18-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 557,
+    "yawns": [
+      [
+        37,
+        200
+      ]
+    ]
+  },
+  "Yawning/18-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 525,
+    "yawns": [
+      [
+        142,
+        319
+      ]
+    ]
+  },
+  "Yawning/19-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 744,
+    "yawns": [
+      [
+        121,
+        322
+      ]
+    ]
+  },
+  "Yawning/19-MaleGlassesmoustache-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 481,
+    "yawns": [
+      [
+        44,
+        196
+      ]
+    ]
+  },
+  "Yawning/2-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 429,
+    "yawns": [
+      [
+        118,
+        308
+      ]
+    ]
+  },
+  "Yawning/20-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 763,
+    "yawns": [
+      [
+        165,
+        304
+      ],
+      [
+        573,
+        723
+      ]
+    ]
+  },
+  "Yawning/21-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 493,
+    "yawns": [
+      [
+        71,
+        189
+      ]
+    ]
+  },
+  "Yawning/21-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 585,
+    "yawns": [
+      [
+        123,
+        276
+      ]
+    ]
+  },
+  "Yawning/22-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 631,
+    "yawns": [
+      [
+        175,
+        322
+      ]
+    ]
+  },
+  "Yawning/22-MaleGlassesmoustache-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 973,
+    "yawns": [
+      [
+        68,
+        331
+      ],
+      [
+        448,
+        798
+      ],
+      [
+        838,
+        946
+      ]
+    ]
+  },
+  "Yawning/23-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 525,
+    "yawns": [
+      [
+        129,
+        266
+      ]
+    ]
+  },
+  "Yawning/23-MaleGlassesBeard-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 734,
+    "yawns": [
+      [
+        154,
+        282
+      ],
+      [
+        326,
+        450
+      ],
+      [
+        497,
+        607
+      ]
+    ]
+  },
+  "Yawning/23-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 775,
+    "yawns": [
+      [
+        137,
+        243
+      ],
+      [
+        533,
+        631
+      ]
+    ]
+  },
+  "Yawning/24-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 646,
+    "yawns": [
+      [
+        154,
+        235
+      ],
+      [
+        372,
+        507
+      ]
+    ]
+  },
+  "Yawning/24-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 774,
+    "yawns": [
+      [
+        213,
+        312
+      ],
+      [
+        493,
+        596
+      ]
+    ]
+  },
+  "Yawning/25-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 268,
+    "yawns": [
+      [
+        29,
+        175
+      ]
+    ]
+  },
+  "Yawning/25-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 509,
+    "yawns": [
+      [
+        162,
+        284
+      ]
+    ]
+  },
+  "Yawning/26-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 338,
+    "yawns": [
+      [
+        124,
+        286
+      ]
+    ]
+  },
+  "Yawning/26-FemaleSunGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 495,
+    "yawns": [
+      [
+        20,
+        166
+      ],
+      [
+        278,
+        392
+      ]
+    ]
+  },
+  "Yawning/26-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 549,
+    "yawns": [
+      [
+        98,
+        281
+      ]
+    ]
+  },
+  "Yawning/27-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 500,
+    "yawns": [
+      [
+        118,
+        271
+      ]
+    ]
+  },
+  "Yawning/27-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 514,
+    "yawns": [
+      [
+        153,
+        296
+      ]
+    ]
+  },
+  "Yawning/28-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 472,
+    "yawns": [
+      [
+        78,
+        284
+      ]
+    ]
+  },
+  "Yawning/28-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 794,
+    "yawns": [
+      [
+        154,
+        291
+      ],
+      [
+        554,
+        695
+      ]
+    ]
+  },
+  "Yawning/28-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 483,
+    "yawns": [
+      [
+        150,
+        290
+      ]
+    ]
+  },
+  "Yawning/29-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 390,
+    "yawns": [
+      [
+        113,
+        269
+      ]
+    ]
+  },
+  "Yawning/29-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 559,
+    "yawns": [
+      [
+        135,
+        238
+      ],
+      [
+        314,
+        397
+      ],
+      [
+        475,
+        535
+      ]
+    ]
+  },
+  "Yawning/3-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 363,
+    "yawns": [
+      [
+        45,
+        175
+      ]
+    ]
+  },
+  "Yawning/3-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 523,
+    "yawns": [
+      [
+        47,
+        197
+      ]
+    ]
+  },
+  "Yawning/3-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 596,
+    "yawns": [
+      [
+        67,
+        203
+      ]
+    ]
+  },
+  "Yawning/30-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 568,
+    "yawns": [
+      [
+        49,
+        195
+      ],
+      [
+        311,
+        472
+      ]
+    ]
+  },
+  "Yawning/30-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 536,
+    "yawns": [
+      [
+        105,
+        255
+      ]
+    ]
+  },
+  "Yawning/31-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 588,
+    "yawns": [
+      [
+        183,
+        308
+      ]
+    ]
+  },
+  "Yawning/31-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 541,
+    "yawns": [
+      [
+        166,
+        306
+      ]
+    ]
+  },
+  "Yawning/31-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 499,
+    "yawns": [
+      [
+        1,
+        336
+      ]
+    ]
+  },
+  "Yawning/32-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 633,
+    "yawns": [
+      [
+        198,
+        434
+      ]
+    ]
+  },
+  "Yawning/33-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 713,
+    "yawns": [
+      [
+        222,
+        363
+      ],
+      [
+        499,
+        636
+      ]
+    ]
+  },
+  "Yawning/33-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 590,
+    "yawns": [
+      [
+        136,
+        311
+      ]
+    ]
+  },
+  "Yawning/34-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 474,
+    "yawns": [
+      [
+        100,
+        236
+      ]
+    ]
+  },
+  "Yawning/34-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 670,
+    "yawns": [
+      [
+        190,
+        279
+      ],
+      [
+        376,
+        478
+      ]
+    ]
+  },
+  "Yawning/35-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 596,
+    "yawns": [
+      [
+        27,
+        125
+      ],
+      [
+        360,
+        474
+      ]
+    ]
+  },
+  "Yawning/35-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 520,
+    "yawns": [
+      [
+        161,
+        227
+      ]
+    ]
+  },
+  "Yawning/36-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 545,
+    "yawns": [
+      [
+        184,
+        275
+      ]
+    ]
+  },
+  "Yawning/36-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 429,
+    "yawns": [
+      [
+        115,
+        253
+      ]
+    ]
+  },
+  "Yawning/37-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 457,
+    "yawns": [
+      [
+        56,
+        176
+      ]
+    ]
+  },
+  "Yawning/37-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 459,
+    "yawns": [
+      [
+        154,
+        342
+      ]
+    ]
+  },
+  "Yawning/38-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 501,
+    "yawns": [
+      [
+        142,
+        234
+      ]
+    ]
+  },
+  "Yawning/38-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 460,
+    "yawns": [
+      [
+        163,
+        284
+      ]
+    ]
+  },
+  "Yawning/39-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 464,
+    "yawns": [
+      [
+        102,
+        204
+      ]
+    ]
+  },
+  "Yawning/39-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 800,
+    "yawns": [
+      [
+        354,
+        435
+      ],
+      [
+        550,
+        664
+      ]
+    ]
+  },
+  "Yawning/4-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 625,
+    "yawns": [
+      [
+        0,
+        171
+      ],
+      [
+        299,
+        483
+      ]
+    ]
+  },
+  "Yawning/4-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 430,
+    "yawns": [
+      [
+        25,
+        213
+      ]
+    ]
+  },
+  "Yawning/40-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 682,
+    "yawns": [
+      [
+        265,
+        378
+      ]
+    ]
+  },
+  "Yawning/40-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 657,
+    "yawns": [
+      [
+        183,
+        343
+      ]
+    ]
+  },
+  "Yawning/41-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 569,
+    "yawns": [
+      [
+        177,
+        269
+      ]
+    ]
+  },
+  "Yawning/41-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 600,
+    "yawns": [
+      [
+        129,
+        255
+      ]
+    ]
+  },
+  "Yawning/42-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 685,
+    "yawns": [
+      [
+        199,
+        346
+      ]
+    ]
+  },
+  "Yawning/43-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 640,
+    "yawns": [
+      [
+        167,
+        250
+      ]
+    ]
+  },
+  "Yawning/44-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 729,
+    "yawns": [
+      [
+        59,
+        180
+      ],
+      [
+        480,
+        591
+      ]
+    ]
+  },
+  "Yawning/45-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 668,
+    "yawns": [
+      [
+        152,
+        265
+      ],
+      [
+        439,
+        548
+      ]
+    ]
+  },
+  "Yawning/46-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 581,
+    "yawns": [
+      [
+        254,
+        400
+      ]
+    ]
+  },
+  "Yawning/47-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 543,
+    "yawns": [
+      [
+        245,
+        363
+      ]
+    ]
+  },
+  "Yawning/5-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 737,
+    "yawns": [
+      [
+        134,
+        286
+      ],
+      [
+        414,
+        550
+      ]
+    ]
+  },
+  "Yawning/6-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 561,
+    "yawns": [
+      [
+        113,
+        396
+      ]
+    ]
+  },
+  "Yawning/6-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 298,
+    "yawns": [
+      [
+        20,
+        164
+      ],
+      [
+        168,
+        259
+      ]
+    ]
+  },
+  "Yawning/7-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 715,
+    "yawns": [
+      [
+        85,
+        179
+      ],
+      [
+        447,
+        587
+      ]
+    ]
+  },
+  "Yawning/7-MaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 682,
+    "yawns": [
+      [
+        54,
+        223
+      ],
+      [
+        417,
+        600
+      ]
+    ]
+  },
+  "Yawning/8-FemaleGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 690,
+    "yawns": [
+      [
+        84,
+        220
+      ],
+      [
+        420,
+        597
+      ]
+    ]
+  },
+  "Yawning/8-MaleGlassesBeard-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 458,
+    "yawns": [
+      [
+        71,
+        149
+      ],
+      [
+        269,
+        391
+      ]
+    ]
+  },
+  "Yawning/9-FemaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 402,
+    "yawns": [
+      [
+        9,
+        65
+      ],
+      [
+        133,
+        199
+      ]
+    ]
+  },
+  "Yawning/9-MaleNoGlasses-Yawning.avi": {
+    "fps": 29.97,
+    "ignore": [],
+    "n_frames": 737,
+    "yawns": [
+      [
+        73,
+        165
+      ],
+      [
+        414,
+        549
+      ]
+    ]
+  },
+  "Yawning/Yawning001_yawn1.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 167,
+    "yawns": [
+      [
+        0,
+        166
+      ]
+    ]
+  },
+  "Yawning/Yawning001_yawn2.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 166,
+    "yawns": [
+      [
+        0,
+        165
+      ]
+    ]
+  },
+  "Yawning/Yawning001_yawn3.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 171,
+    "yawns": [
+      [
+        0,
+        153
+      ]
+    ]
+  },
+  "Yawning/Yawning002_yawn1.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 158,
+    "yawns": [
+      [
+        0,
+        132
+      ]
+    ]
+  },
+  "Yawning/Yawning002_yawn2.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 187,
+    "yawns": [
+      [
+        18,
+        166
+      ]
+    ]
+  },
+  "Yawning/Yawning002_yawn3.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 138,
+    "yawns": [
+      [
+        13,
+        116
+      ]
+    ]
+  },
+  "Yawning/Yawning003_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 98,
+    "yawns": [
+      [
+        2,
+        96
+      ]
+    ]
+  },
+  "Yawning/Yawning003_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 97,
+    "yawns": [
+      [
+        0,
+        96
+      ]
+    ]
+  },
+  "Yawning/Yawning003_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 71,
+    "yawns": [
+      [
+        0,
+        70
+      ]
+    ]
+  },
+  "Yawning/Yawning004_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 88,
+    "yawns": [
+      [
+        0,
+        83
+      ]
+    ]
+  },
+  "Yawning/Yawning004_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 98,
+    "yawns": [
+      [
+        0,
+        86
+      ]
+    ]
+  },
+  "Yawning/Yawning004_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 89,
+    "yawns": [
+      [
+        0,
+        76
+      ]
+    ]
+  },
+  "Yawning/Yawning005_yawn1.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 106,
+    "yawns": [
+      [
+        0,
+        90
+      ]
+    ]
+  },
+  "Yawning/Yawning005_yawn2.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 121,
+    "yawns": [
+      [
+        0,
+        98
+      ]
+    ]
+  },
+  "Yawning/Yawning005_yawn3.mp4": {
+    "fps": 30.0,
+    "ignore": [],
+    "n_frames": 125,
+    "yawns": [
+      [
+        0,
+        121
+      ]
+    ]
+  },
+  "Yawning/Yawning006_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 105,
+    "yawns": [
+      [
+        0,
+        101
+      ]
+    ]
+  },
+  "Yawning/Yawning006_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 93,
+    "yawns": [
+      [
+        0,
+        80
+      ]
+    ]
+  },
+  "Yawning/Yawning006_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 84,
+    "yawns": [
+      [
+        0,
+        79
+      ]
+    ]
+  },
+  "Yawning/Yawning007_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 118,
+    "yawns": [
+      [
+        0,
+        111
+      ]
+    ]
+  },
+  "Yawning/Yawning007_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 135,
+    "yawns": [
+      [
+        0,
+        119
+      ]
+    ]
+  },
+  "Yawning/Yawning007_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 108,
+    "yawns": [
+      [
+        0,
+        92
+      ]
+    ]
+  },
+  "Yawning/Yawning008_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 82,
+    "yawns": [
+      [
+        0,
+        76
+      ]
+    ]
+  },
+  "Yawning/Yawning008_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 141,
+    "yawns": [
+      [
+        0,
+        125
+      ]
+    ]
+  },
+  "Yawning/Yawning008_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 101,
+    "yawns": [
+      [
+        0,
+        94
+      ]
+    ]
+  },
+  "Yawning/Yawning009_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 102,
+    "yawns": [
+      [
+        0,
+        94
+      ]
+    ]
+  },
+  "Yawning/Yawning009_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 99,
+    "yawns": [
+      [
+        0,
+        79
+      ]
+    ]
+  },
+  "Yawning/Yawning009_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 114,
+    "yawns": [
+      [
+        0,
+        97
+      ]
+    ]
+  },
+  "Yawning/Yawning010_yawn1.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 87,
+    "yawns": [
+      [
+        0,
+        67
+      ]
+    ]
+  },
+  "Yawning/Yawning010_yawn2.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 80,
+    "yawns": []
+  },
+  "Yawning/Yawning010_yawn3.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 64,
+    "yawns": [
+      [
+        0,
+        58
+      ]
+    ]
+  },
+  "Yawning/Yawning010_yawn4.mp4": {
+    "fps": 25.0,
+    "ignore": [],
+    "n_frames": 82,
+    "yawns": []
+  }
+}

@@ -1,0 +1,455 @@
+==============================================================================
+ DRIVER DROWSINESS DETECTION SYSTEM  -  explaine.txt
+==============================================================================
+This file explains, step by step, what each part of the system does and WHY,
+in plain language. It is written as the project is built, one module at a time.
+Read it top to bottom to understand the whole pipeline.
+
+------------------------------------------------------------------------------
+ THE BIG PICTURE
+------------------------------------------------------------------------------
+Goal: watch the driver through a dashboard webcam (and listen through the mic)
+and decide, in real time, whether they are ALERT (awake, talking, looking at
+the road) or DROWSY (yawning, eyes closing, head nodding). When DROWSY persists,
+speak a warning and log the event.
+
+Two "senses" run at the same time:
+  1) VIDEO  - MediaPipe Face Mesh finds 468 face points every frame; from them
+              we measure eye openness (EAR), mouth openness (MAR), head angle
+              (yaw/pitch/roll), and a Mouth Movement Score (MMS).
+  2) AUDIO  - a background thread listens to the mic and tags the sound as
+              speech / yawn / silence.
+
+A FUSION layer combines both every ~1.5 seconds into one final state, an ALERT
+layer speaks a warning when needed, and a LOGGER records every event.
+
+The single most important idea here is the MOUTH MOVEMENT SCORE (MMS): an open
+mouth looks the same to a camera whether the driver is TALKING or YAWNING. MMS
+tells them apart by HOW the mouth moves over time:
+  - Talking = small, fast, rhythmic motion  (low amplitude, high oscillation)
+  - Yawning = one big, slow opening         (high amplitude, low oscillation)
+
+------------------------------------------------------------------------------
+ MODULE 1 - config.py   (the control panel)
+------------------------------------------------------------------------------
+What it is: one file holding every tunable number, so tuning never means
+hunting through code. Every other module imports its settings from here.
+
+What's inside and why:
+  * Paths - where logs and frame snapshots are written (logs/ folder).
+  * States - the three words the system can output: ALERT, DROWSY, NEUTRAL.
+  * Landmark indices - which of the 468 face points we read:
+      - eyes (for EAR), mouth (for MAR), 6 points for head pose,
+      - and the MMS points: the inner lips (13 top, 14 bottom) whose gap we
+        track, divided by the eye-to-eye distance (33 to 263) so the score is
+        the same whether your face is near or far from the camera.
+  * Thresholds (the actual decision lines):
+      - EAR_CLOSED = 0.20      : below this the eyes count as shut
+      - EYE_CLOSED_SECONDS=1.0 : shut this long = a drowsiness sign
+      - MAR_YAWN = 0.60        : mouth wider than this = "wide open"
+      - YAWN_MIN_SECONDS = 1.2 : open this long = a yawn (not just a word)
+      - NOD_METRIC_DELTA = 0.06 : the head droops this far below its normal
+        resting position = a nod. We compare against a slowly-learned "normal"
+        instead of a fixed number, so it auto-calibrates to however the camera
+        is mounted. (This is a 2D-geometry metric, NOT the solvePnP pitch angle -
+        see the HEAD-NOD FIX note after Module 2 for why we switched.)
+      - MMS_SPEECH_AMP_MAX / MMS_SPEECH_OSC_MIN / MMS_YAWN_AMP_MIN : the lines
+        that separate talking from yawning (see THE BIG PICTURE above).
+      - FUSION_INTERVAL = 1.5 s, ALERT_COOLDOWN = 8 s, etc.
+  * learned_thresholds.json hook - if the train/ folder ever fits these numbers
+    to real data, dropping that JSON next to config.py overrides the defaults
+    automatically, with no code change.
+
+Result: config.py imports cleanly and exposes all the knobs the rest of the
+system reads. Nothing decides anything yet - it just holds the settings.
+
+------------------------------------------------------------------------------
+ HELPER - _tf_guard.py   (an environment fix, created during Module 2)
+------------------------------------------------------------------------------
+What it is: a tiny safety shim that lets MediaPipe import on this computer.
+
+Why it was needed: this PC has TensorFlow installed next to MediaPipe, and a
+version clash means the mere act of importing MediaPipe tries to load
+TensorFlow, which crashes. MediaPipe is written to cope when TensorFlow is
+*absent*, so the guard makes "import tensorflow" politely fail. MediaPipe then
+takes its no-TensorFlow path and loads fine. We change nothing on the system
+and uninstall nothing - any file that needs the camera just does
+`import _tf_guard` first. (A permanent alternative is to uninstall TensorFlow,
+which the README mentions, but the guard keeps this folder self-contained.)
+
+------------------------------------------------------------------------------
+ MODULE 2 - video_model.py   (the camera "sense")
+------------------------------------------------------------------------------
+What it is: the VideoModel class. You create it once, then call
+process(frame) on every webcam frame; it returns one tidy dictionary describing
+the driver right now.
+
+Step by step, for each frame:
+  1) Find the face. MediaPipe Face Mesh locates 468 points. If no face is
+     found (driver leaned out of view, glare, etc.) we REUSE the last good
+     numbers (forward-fill) so timers don't jump - exactly how the training
+     data was prepared.
+  2) Measure the eyes - EAR (eye aspect ratio). When the eyelids close, the
+     eye gets "flatter" and EAR drops below EAR_CLOSED. We don't fire on a
+     blink; only eyes shut CONTINUOUSLY for EYE_CLOSED_SECONDS counts.
+  3) Measure the mouth - MAR (mouth aspect ratio). Rises when the mouth opens.
+  4) Measure the head angle - yaw/pitch/roll, via a 3D-to-2D fit (solvePnP).
+     Yaw (left/right turn) is still used to tell if the driver faces the road.
+     (Pitch was meant to be the up/down nod angle, but it proved unreliable -
+     the nod is detected with the 2D metric in step 6 instead.)
+  5) Compute the MMS signal - the normalized inner-lip gap (points 13-14
+     divided by the eye-to-eye distance). We keep the last ~15 of these in a
+     rolling window and measure two things over it:
+        amplitude   = how far the lips travelled (max minus min)
+        oscillation = how many times the motion changed direction
+     Then we label the mouth:
+        "speech" = small amplitude + lots of direction changes (chatter)
+        "yawn"   = big amplitude + few direction changes (one slow opening)
+        "still"  = neither
+     THIS is the core trick that stops a yawn being mistaken for talking.
+  6) Detect a nod. We use a 2D-geometry "nod metric": where the nose sits
+     within the eyes-to-chin span, nod_metric = (nose_y - eyes_y) / (chin_y -
+     eyes_y). Drooping the head DOWN tucks the chin and LOWERS this ratio. It is
+     scale- and position-invariant (works the same near or far, anywhere in the
+     frame) and, unlike the head-angle pitch, has no jumpy wraparound. We keep a
+     slowly-updating "normal" ratio and flag a nod when the head drops below it
+     by NOD_METRIC_DELTA for NOD_MIN_SECONDS. The normal only updates while the
+     head is steady, so a long droop can't quietly redefine "normal".
+     (See the HEAD-NOD FIX note below for why this replaced the pitch angle.)
+  7) Decide this frame's state:
+        DROWSY  if eyes shut (sustained) OR yawning OR nodding
+        ALERT   if eyes open AND mouth_state == speech AND facing the road
+        NEUTRAL otherwise (quiet / unclear - audio + fusion will refine it)
+
+Why a class with memory: a yawn, a nod and the MMS are all about change OVER
+TIME, so VideoModel remembers recent frames between calls.
+
+Verified: `python video_model.py` feeds a blank (faceless) frame through the
+whole path and correctly returns face_found=False, state=NEUTRAL without
+crashing - proving the code runs even before a camera is attached.
+
+------------------------------------------------------------------------------
+ HEAD-NOD FIX - why the nod cue is 2D geometry, not the pitch angle
+------------------------------------------------------------------------------
+The problem: the first live run fired 8 false "drowsy" alarms while the driver
+was wide awake, all blamed on "nodding 100%". The cause was the head-pitch angle
+from solvePnP. On a real dashboard webcam that angle is bistable: it sits right
+at the wrap-around point and flips between two values (e.g. -0.94 <-> +0.98)
+frame to frame even when the head is perfectly still. Those flips looked like
+huge, sustained nods, and they even dragged the "normal pitch" baseline around,
+so the system thought the driver was nodding for whole clips at a time.
+
+The fix: drop the pitch angle for nod detection and use a pure 2D-geometry ratio
+instead - where the nose sits within the eyes-to-chin span:
+
+    nod_metric = (nose_y - eyes_y) / (chin_y - eyes_y)
+
+Lowering the head tucks the chin and lowers this ratio. Because it is built only
+from on-screen point positions, it is invariant to face size and position and
+has no wrap-around, so it is steady frame to frame. Measured on real clips its
+within-clip wobble is tiny (std ~0.03), and it cleanly separates an upright head
+(Alert clip ~0.45) from a drooping one (Drowsy clip ~0.35). The pitch angle is
+still computed and used for yaw (facing-the-road), where its noise is harmless
+because yaw only affects the non-alarm ALERT label.
+
+Verified headless on real labelled clips after the fix:
+    - Alert clip    -> 0 alarms      (previously false-fired). CORRECT.
+    - Drowsy clip   -> DROWSY + alarm.                         CORRECT.
+    - Yawning clip  -> DROWSY + alarm.                         CORRECT.
+    - Singing clip  -> 0 alarms.                               CORRECT.
+
+------------------------------------------------------------------------------
+ MODULE 3 - audio_model.py   (the microphone "sense")
+------------------------------------------------------------------------------
+What it is: AudioModel, a background thread that listens to the mic and ~twice
+a second tags the recent ~1 second of sound into buckets:
+    speech, yawn, singing, snore, breathing, silence
+
+Why we need sound at all: the camera literally cannot tell a yawn from talking
+when the mouth is open - both look like "open mouth". But they sound totally
+different. Audio settles that tie. get_audio_state() boils the buckets down to
+one word for the fusion layer: 'speech' (awake), 'yawn' (drowsy) or 'silence'.
+
+How it stays safe:
+  * It runs on its own thread, so the camera loop never waits for it.
+  * The heavy libraries (PyTorch + the PANNs sound model) load lazily inside
+    that thread. If anything is missing - no microphone, model not downloaded,
+    a bad package - the thread quietly disables itself and .get() just returns
+    zeros. The video side keeps working exactly the same. You can read
+    audio.status to see why it's off.
+  * The sound model is PANNs Cnn14, which runs on PyTorch on purpose (NOT
+    TensorFlow), to avoid the MediaPipe clash described above.
+
+Verified: `python audio_model.py` starts the thread, reads scores once, and
+returns 'silence' with zero scores without blocking or crashing - proving the
+non-blocking contract. (Becoming fully "ready" needs the model + a mic and is
+exercised live by main.py; the first ever run downloads the model, ~300 MB.)
+
+------------------------------------------------------------------------------
+ MODULE 4 - fusion.py   (the judge that combines both senses)
+------------------------------------------------------------------------------
+What it is: FusionEngine. You feed it the video reading and the one-word audio
+state on every frame; about every 1.5 seconds it announces ONE verdict - ALERT,
+DROWSY or NEUTRAL - with a confidence (0-1) and a short list of reasons.
+
+Why a window and not per-frame: a single twitchy frame must not trigger an
+alarm. By averaging ~1.5 s of frames the verdict is steady, and it matches the
+brief's "output a unified state every 1-2 seconds".
+
+How it decides (the brief's rules turned into numbers):
+  - It tallies, across the window, how often each cue fired: eyes closed,
+    yawning, nodding, speaking.
+  - DROWSY evidence = weighted sum of (eyes + yawn + nod).
+    ALERT  evidence = weight * (speaking).
+  - The mic then NUDGES the side it supports: hearing "voice" adds to ALERT,
+    hearing "yawn" adds to DROWSY. Silence stays neutral - it doesn't add
+    drowsiness, it just doesn't argue for ALERT (which is the brief's
+    "yawn-sound OR silence" permission to call it DROWSY).
+  - Whichever side has more evidence wins; confidence = how dominant it was.
+
+The important case it gets right: mouth open, but the mic clearly hears talking
+-> the audio nudge tips it to ALERT (singing/talking), NOT a yawn. That's the
+single ambiguity the camera alone can never solve.
+
+Every verdict carries a plain-English reasons list (e.g. "yawning 100%",
+"audio: voice") so you can always see WHY it decided what it did.
+
+Verified: `python fusion.py` runs three synthetic scenarios on a fake clock -
+(yawn+silence -> DROWSY), (talk+voice -> ALERT), and the tricky
+(open-mouth + voice -> ALERT) tie-break - all pass.
+
+------------------------------------------------------------------------------
+ MODULE 5 - alert.py   (the voice that warns the driver)
+------------------------------------------------------------------------------
+What it is: AlertManager. You call update(fused_state) every frame; it decides
+when to speak a warning out loud.
+
+The rules (designed to warn fast but never nag):
+  - The verdict must stay DROWSY continuously for 1.5 s before it speaks - so a
+    one-off bad reading can't trigger a false alarm.
+  - While the driver stays drowsy it repeats the warning, but at most once every
+    8 s (the cooldown), so it isn't annoying.
+  - Once the driver is clearly ALERT again for 1.5 s, it resets and can warn
+    afresh next time.
+
+How the sound is made: the spoken message ("Warning. You appear drowsy...") is
+produced by pyttsx3, an OFFLINE text-to-speech engine, on a background thread so
+the camera never freezes while it talks. If text-to-speech isn't available, it
+falls back to a loud beep - so there is ALWAYS an audible alarm.
+
+Verified: `python alert.py` runs the whole timing logic on a fake clock with a
+silent stand-in voice and confirms it fires exactly once after the hold, a
+second time after the cooldown, and a third time after recovering and re-arming.
+
+------------------------------------------------------------------------------
+ MODULE 6 - logger.py   (the flight recorder)
+------------------------------------------------------------------------------
+What it is: EventLogger, which writes every verdict to disk so events can be
+reviewed afterwards.
+
+What it records, into the logs/ folder:
+  - events.csv   : one row per event (open it in Excel) - time, state,
+                   confidence, the reasons, plus the raw numbers (EAR, MAR, MMS,
+                   pitch) and the audio state.
+  - events.jsonl : the same data as one JSON object per line, for code/analysis.
+  - snapshots/   : a photo of the moment the driver BECOMES drowsy. We save it
+                   only on the transition into DROWSY (not every drowsy frame),
+                   so the disk doesn't fill up. The image is saved in a way that
+                   works even if the folder path has non-English characters.
+
+Folders are created automatically; you never have to set anything up.
+
+Verified: `python logger.py` writes three fake events (one of them a DROWSY
+transition) to a temp folder and confirms 3 CSV rows, 3 JSONL lines, and exactly
+1 snapshot were created.
+
+------------------------------------------------------------------------------
+ MODULE 7 - main.py   (the conductor that runs everything)
+------------------------------------------------------------------------------
+What it is: the program you actually run. It opens the camera, starts the mic
+thread, and runs the live loop that ties all the modules together:
+
+   frame -> video reads the face -> fusion combines it with the audio word
+         -> alert decides whether to speak -> logger records it -> HUD drawn
+
+How to run:
+   python main.py                    live webcam + microphone
+   python main.py --no-audio         webcam only (no mic)
+   python main.py --source clip.mp4  run on a recorded video
+   add --no-display to run with no window (headless, e.g. testing a clip)
+
+On screen (the HUD) it shows: the current state + confidence in colour (green
+ALERT / red DROWSY / grey NEUTRAL), the reasons, the live EAR/MAR/MMS numbers,
+the audio scores, and a red banner while the alarm is speaking. Press q to quit,
+m to toggle the full face mesh.
+
+A subtle but important detail - two clocks: for the live camera it uses the real
+wall clock; for a recorded file it uses a "video clock" (frame number / fps), so
+a 2-second yawn in a file is measured as 2 seconds even though the computer
+processes the file much faster. Without this, the "must last N seconds" rules
+would never trigger on a clip.
+
+------------------------------------------------------------------------------
+ TUNING PASS (done while validating Module 7 on real clips)
+------------------------------------------------------------------------------
+Running the system on REAL YawDD clips exposed a real problem and we fixed it -
+this is the kind of evidence-based tuning the project is meant to do:
+
+  Problem: on an actual yawn the system first said ALERT (a dangerous miss). The
+  MMS was labelling the wide-open yawn as "speech", which switched off yawn
+  detection.
+  Why: a yawn is HELD wide open, so within a half-second window the lips barely
+  travel - my first version judged "talking vs yawn" by travel + wiggle, and the
+  small travel plus tracking jitter looked like chatter.
+  Measurement: a probe over real Yawning / Singing / Alert clips showed the
+  reliable signal is HOW WIDE the mouth opens: yawns reach a lip-gap "level" of
+  0.5-0.8 and MAR over 1.0, while singing only reaches ~0.42 and MAR ~0.57, and
+  talking ~0.02. The wiggle count barely differs between them.
+  Fix: classify the mouth by how WIDE it opened first (level), so a wide opening
+  is never called "speech"; keep audio as the real talk-vs-yawn tie-breaker. We
+  also added a small "evidence floor" so a 2%-of-window twitch can't be reported
+  as a confident ALERT/DROWSY.
+
+  Result, verified headless on real clips:
+    - Yawning clip  -> DROWSY detected, alarm fires once. CORRECT.
+    - Singing clip  -> no DROWSY, no false alarm.          CORRECT.
+
+------------------------------------------------------------------------------
+ MODULE 8 - requirements.txt + README.md   (setup + the manual)
+------------------------------------------------------------------------------
+requirements.txt lists what to install (OpenCV, MediaPipe, NumPy, pyttsx3 for
+the voice, and the optional audio stack: sounddevice + panns-inference + torch).
+No TensorFlow anywhere.
+
+README.md is the front-door manual: what the system is, a diagram of how the
+pieces connect, how to install (incl. the TensorFlow note), how to run, how to
+tune via config.py, and - as the brief asks - guidance on what video data to
+collect yourself and what augmentation to apply.
+
+------------------------------------------------------------------------------
+ MODULE 9 - train/   (teach it on your own data, in Google Colab)
+------------------------------------------------------------------------------
+What it is: the optional "learning" part. The live system already works with
+sensible built-in thresholds; this folder lets you RE-FIT those thresholds to
+your own drivers, camera and lighting.
+
+  - extract_features.py: runs your labelled clips through the SAME video code the
+    live system uses and writes a table of numbers (one row per frame). Using the
+    identical code means a threshold fitted here behaves the same way live.
+  - train_drowsiness.ipynb: a Google Colab notebook that mounts your Google
+    Drive, builds that table, looks at how each behaviour (yawning, singing,
+    talking, sleeping...) distributes, and automatically picks the cut-off values
+    that best separate them. It writes learned_thresholds.json back into the
+    project; the live system then loads it on its own at startup.
+  - fit_thresholds.py: the SAME cut-off-picking as the notebook, but as a plain
+    local script so you can train without Colab. Two commands - extract_features.py
+    to build the table, then fit_thresholds.py to write learned_thresholds.json.
+    (Extraction is the slow, CPU-heavy step; the fitting itself is instant.)
+  - annotate_yawns.py: a small hand-labelling tool (see the YAWN-SEGMENT LABELS
+    note below) that marks the real yawn inside each yawn clip, so training only
+    learns from true-yawn frames.
+  - README.md: the Drive folder layout, the exact steps, and how this relates to
+    the parent project's full model-training scripts if you want a learned model
+    instead of tuned rules.
+
+Why Colab and not here: going through every clip is slow on a normal CPU, so the
+real run is done on Colab's machines. A tiny local "smoke" command is provided
+just to prove the code runs.
+
+Verified: the extractor ran over a small sample (12 clips) and produced a clean
+feature table whose per-class numbers make sense (yawning mouth opens far wider
+than singing/talking), and the notebook's threshold-fitting logic was checked on
+that table and returned sensible cut-offs.
+
+------------------------------------------------------------------------------
+ YAWN-SEGMENT LABELS - why we hand-mark the real yawn inside each yawn clip
+------------------------------------------------------------------------------
+The problem: a clip in the Yawning/ folder is mostly NOT a yawn. The driver sits
+normally, yawns once, then sits normally again. The old training labelled EVERY
+frame of that clip "Yawning", so all those closed-mouth frames were taught to the
+model as examples of yawning. That pulled the yawn cut-offs DOWN, and the live
+system started shouting "drowsy" at ordinary talking. (This is a precision leak,
+the labelling cousin of the head-nod false alarms fixed earlier.)
+
+The fix: annotate_yawns.py lets you scrub each clip and mark exactly where the
+yawn happens. Every frame ends up with one of three labels:
+  * YAWN    - inside a yawn span you marked. The real positive examples.
+  * NEUTRAL - mouth closed / normal, outside the span. Now used as a NEGATIVE
+              (the very frames that used to be mislabelled as yawning).
+  * IGNORE  - ambiguous "getting tired but not yet yawning" frames. Thrown away
+              entirely so they can't confuse the model either way.
+You can mark several yawn spans in one video (some clips contain 2-3 yawns), and
+lay IGNORE bands over the fuzzy moments; where they overlap, IGNORE wins.
+
+How it flows through the pipeline:
+  1. annotate_yawns.py writes train/yawn_segments.json   (start/end frames).
+  2. extract_features.py reads that file and, for an annotated clip, writes
+     "Yawning" rows only for the yawn frames, "Neutral" rows for the rest, and
+     skips IGNORE frames. Clips you didn't annotate are unchanged.
+  3. the Colab notebook adds the new "Neutral" rows to the yawn negatives, so the
+     fitted MAR_YAWN / MMS_YAWN_LEVEL cut-offs move UP (cleaner, higher precision).
+
+It is OPTIONAL: with no JSON present, everything behaves exactly as before. The
+tool itself is light (just video playback) so you run it on your own machine; only
+the heavy feature-extraction + fitting is done in Colab.
+
+Verified: the per-frame logic (resolve_label) passed its self-test including the
+IGNORE-over-YAWN overlap rule and multi-span clips; and on the 12-clip smoke run
+an annotated clip split correctly into 34 "Neutral" lead-in frames + the yawn
+frames as "Yawning", while non-yawn folders stayed untouched.
+
+------------------------------------------------------------------------------
+ DEEP-LEARNING OPTION - a fine-tuned yawn CNN (transfer learning)
+------------------------------------------------------------------------------
+Everything above is rule-based: we USE pretrained networks (FaceMesh, PANNs) but
+we don't TRAIN one ourselves. This optional path adds a model we actually train,
+so the project also demonstrates deep learning (transfer learning), with a loss
+function and an honest evaluation. It lives entirely in train/ and does NOT touch
+the live system - the rule-based detector keeps working exactly as before.
+
+The idea: instead of judging a yawn by one hand-tuned number (MAR), let a small
+image network LOOK at the mouth and decide. We stand on a network already trained
+on millions of images (MobileNetV2) and just re-teach its final layer for our
+yawn/not-yawn job - that's "transfer learning", and it needs very little data.
+
+Three new scripts:
+  1. build_mouth_dataset.py - goes through the clips, uses the SAME FaceMesh to
+     find the mouth, crops a little square around it, and saves it as a picture
+     labelled yawn (1) or not-yawn (0). Labels come straight from your
+     yawn_segments.json (YAWN->1, NEUTRAL->0, IGNORE->skip); talking/singing clips
+     supply "hard negatives" (mouth open but NOT a yawn). It also notes which
+     PERSON each clip is, from the filename.
+  2. train_yawn_cnn.py - loads MobileNetV2 pretrained, swaps its last layer to two
+     outputs, and fine-tunes it on those mouth pictures. It first freezes the
+     network and trains only the new layer, then unfreezes and gently tunes the
+     rest. Because yawns are the minority, the loss is class-weighted. Crucially it
+     splits BY PERSON (some people train, other people validate) so the score
+     isn't inflated by seeing the same face twice.
+  3. evaluate_yawn.py - on the held-out people, it scores the CNN and the old rule
+     (mar >= MAR_YAWN) side by side and prints Precision / Recall / F1 for the yawn
+     class plus a confusion matrix - the numbers that matter when one class is rare
+     (plain "accuracy" is misleading here).
+
+What it needs: torch + torchvision (already installed) and, ideally, the GPU (this
+machine has one, so training is quick). Run order:
+     python build_mouth_dataset.py --videos ../../data/raw_videos
+     python train_yawn_cnn.py --manifest mouth_manifest.csv --epochs 10
+     python evaluate_yawn.py --model yawn_cnn.pt --manifest mouth_manifest.csv
+
+Honest note: on this data a fine-tuned CNN is often only comparable to the tuned
+rule - the point is the METHOD (a trained model + a fair, person-separated
+comparison), not a guaranteed accuracy jump. If the CNN wins, wiring it into the
+live system would be a separate, optional step (loaded only if present, exactly
+like learned_thresholds.json).
+
+Verified: each script has a self-test / tiny smoke mode; a 6-clip smoke ran the
+whole chain end to end - built 87 yawn + 210 not-yawn crops across 3 subjects,
+fine-tuned with a genuine person-separated split (2 train / 1 held-out), and
+produced the CNN-vs-baseline comparison table (numbers are placeholders on such a
+tiny random-init run; the real run uses the pretrained weights and all clips).
+
+==============================================================================
+ ALL MODULES COMPLETE. To run the whole thing:  python main.py
+ (or  python main.py --no-audio  for video only,
+  or  python main.py --source <clip> --no-display  to test on a recording)
+==============================================================================

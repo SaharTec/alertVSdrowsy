@@ -1,0 +1,36 @@
+# .gitignore for the alertVSdrowsy sub-project.
+# Goal: commit the CODE + the trained yawn CNN model, but NOT the raw videos,
+# the huge mouth-crop image dataset, or runtime logs/snapshots.
+
+# ── Python cache / envs ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# ── Raw / any video files ──────────────────────────────────────────────
+# Training clips live in ../../data/raw_videos and are read by
+# train/extract_features.py; never commit video into the repo.
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# ── Mouth-crop image dataset (~69k JPGs) + its manifest ─────────────────
+# Regenerate with train/build_mouth_dataset.py; do not commit.
+train/mouth_crops/
+train/mouth_manifest.csv
+train/features*.csv
+
+# ── Runtime logs, drowsy snapshots, learned calibration ────────────────
+logs/events.csv
+logs/events.jsonl
+logs/snapshots/
+learned_thresholds.json
+
+# ── Trained models ─────────────────────────────────────────────────────
+# Ignore stray training checkpoints, but KEEP the shipped model.
+train/*.pt
+!train/yawn_cnn.pt
