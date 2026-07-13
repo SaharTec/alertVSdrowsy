@@ -79,7 +79,7 @@ class AudioModel(threading.Thread):
         with self._lock:
             return dict(self._latest)
 
-    def get_audio_state(self):
+    def get_audio_state(self, now=None):
         """Collapse the raw buckets into one word for the fusion layer.
 
         'speech'  - voice present (talking or singing) -> awake signal
@@ -87,6 +87,9 @@ class AudioModel(threading.Thread):
         'silence' - neither stands out                  -> no opinion
         Speech wins ties with yawn: a driver who is clearly talking is awake
         even if a yawn-ish sound briefly registers.
+
+        `now` is accepted (and ignored) so this shares one call signature with
+        FileAudioModel, whose recorded-clip audio must be queried by video time.
         """
         s = self.get()
         voice = max(s.get("speech", 0.0), s.get("singing", 0.0))

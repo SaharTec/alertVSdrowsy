@@ -131,8 +131,18 @@ def main():
                     help="webcam index (default from config)")
     ap.add_argument("--no-audio", action="store_true",
                     help="disable the microphone / PANNs audio thread")
+    ap.add_argument("--audio-file", default=None,
+                    help="run the audio sense on THIS file's soundtrack instead of "
+                         "the microphone. Pair it with --source (same file) to "
+                         "reproduce the live audio+video verdict on a recorded clip, "
+                         "e.g. on Colab where there is no mic.")
     ap.add_argument("--no-display", action="store_true",
                     help="don't open a window (headless; useful on a clip)")
+    ap.add_argument("--save-video", default=None,
+                    help="write an annotated MP4 (the same HUD burned into every "
+                         "frame) to this path. Works even with --no-display, so you "
+                         "can review a clip's detection where there is no window "
+                         "(e.g. Google Colab).")
     ap.add_argument("--max-frames", type=int, default=0,
                     help="stop after N frames (0 = unlimited)")
     ap.add_argument("--use-cnn", action="store_true",
@@ -162,7 +172,16 @@ def main():
 
     audio = None
     if not args.no_audio:
-        if not _AUDIO_AVAILABLE:
+        if args.audio_file:
+            # Recorded-clip audio: tag the file's own soundtrack with the SAME PANNs
+            # model the mic uses, so a Colab/offline run matches the live verdict.
+            print(f"Reading audio from file: {args.audio_file} "
+                  "(first run downloads PANNs ~300 MB)...")
+            from file_audio_model import FileAudioModel
+            audio = FileAudioModel(args.audio_file)
+            audio.start()
+            print(f"  audio: {audio.status}")
+        elif not _AUDIO_AVAILABLE:
             print("Audio unavailable (audio_model import failed) - video only.")
         else:
             print("Starting audio thread (first run downloads PANNs ~300 MB)...")
@@ -170,6 +189,12 @@ def main():
             audio.start()
 
     show_mesh = True
+    # Optional annotated-video output. Created lazily on the first frame because we
+    # need that frame's exact size for the writer. A saved run still needs the HUD
+    # drawn, even when no window is shown.
+    writer = None
+    save_path = args.save_video
+
     start = time.time()
     frame_idx = 0
     print("Running. Press q/ESC to quit, m to toggle mesh." if not args.no_display
@@ -188,15 +213,29 @@ def main():
             now = (start + frame_idx / fps) if use_file else time.time()
 
             vid = video.process(frame, now=now)
-            audio_state = audio.get_audio_state() if audio is not None else "silence"
+            # Pass the clock: the mic model ignores `now`; the file model uses it to
+            # return the audio window aligned with this frame's video time.
+            audio_state = audio.get_audio_state(now) if audio is not None else "silence"
             fused = fusion.update(vid, audio_state, now=now)
             banner = alerter.update(fused.state, fused.reasons, now=now)
 
             if fused.is_new:
                 logger.log(fused, vid, frame=frame, now=now)
 
-            if not args.no_display:
+            # Draw the HUD when we either show a window OR save a video.
+            if not args.no_display or save_path is not None:
                 _draw_hud(frame, vid, fused, audio, banner, show_mesh)
+
+            if save_path is not None:
+                if writer is None:                       # first frame -> open writer
+                    h, w = frame.shape[:2]
+                    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+                    writer = cv2.VideoWriter(save_path, fourcc, fps, (w, h))
+                    if not writer.isOpened():
+                        raise IOError(f"Could not open VideoWriter for {save_path}")
+                writer.write(frame)
+
+            if not args.no_display:
                 cv2.imshow("Driver drowsiness - q quit, m mesh", frame)
                 key = cv2.waitKey(1) & 0xFF
                 if key in (ord("q"), 27):
@@ -211,6 +250,8 @@ def main():
     finally:
         cap.release()
         video.close()
+        if writer is not None:
+            writer.release()
         if audio is not None:
             audio.stop()
         if not args.no_display:
@@ -218,6 +259,8 @@ def main():
 
     print(f"Done. Processed {frame_idx} frames. "
           f"Alarms fired: {alerter.fire_count}. Log: {logger.csv_path}")
+    if save_path is not None:
+        print(f"Annotated video written to: {save_path}")
 
 
 if __name__ == "__main__":
