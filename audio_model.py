@@ -49,6 +49,53 @@ _BUCKET_NAMES = {
 BUCKETS = list(_BUCKET_NAMES.keys())
 
 
+# ---------------------------------------------------------------------------
+# Shared audio logic. Both the mic model (AudioModel, below) and the recorded-
+# clip model (FileAudioModel, in file_audio_model.py) route through these three
+# functions, so "the recorded run reproduces the live run exactly" is guaranteed
+# structurally - there is only ONE copy of the score->state mapping to keep in
+# sync, not two that must be edited together.
+# ---------------------------------------------------------------------------
+def collapse_audio_state(scores):
+    """Collapse raw bucket scores into one word for the fusion layer.
+
+    'speech'  - voice present (talking or singing) -> awake signal
+    'yawn'    - an audible yawn                     -> drowsy signal
+    'silence' - neither stands out                  -> no opinion
+    Speech wins ties with yawn: a driver who is clearly talking is awake even if
+    a yawn-ish sound briefly registers.
+    """
+    voice = max(scores.get("speech", 0.0), scores.get("singing", 0.0))
+    yawn = scores.get("yawn", 0.0)
+    if voice >= AUDIO_SPEECH_THRESH and voice >= yawn:
+        return "speech"
+    if yawn >= AUDIO_YAWN_THRESH:
+        return "yawn"
+    return "silence"
+
+
+def build_bucket_idx(labels):
+    """Map each bucket to the AudioSet class indices in the tagger's `labels`.
+
+    A name missing from this tagger version is simply skipped (no crash), so both
+    models resolve buckets against the exact same label list the same way.
+    """
+    name_to_idx = {name: i for i, name in enumerate(labels)}
+    return {
+        bucket: [name_to_idx[n] for n in names if n in name_to_idx]
+        for bucket, names in _BUCKET_NAMES.items()
+    }
+
+
+def collapse_scores(clipwise_row, bucket_idx):
+    """Reduce one clip's (527,) class scores to our per-bucket scores: each
+    bucket takes the max over its class indices (0.0 if it has none)."""
+    return {
+        b: (float(clipwise_row[idx].max()) if idx else 0.0)
+        for b, idx in bucket_idx.items()
+    }
+
+
 class AudioModel(threading.Thread):
     """Background thread: microphone -> PANNs Cnn14 (PyTorch) -> bucket scores.
 
@@ -80,25 +127,13 @@ class AudioModel(threading.Thread):
             return dict(self._latest)
 
     def get_audio_state(self, now=None):
-        """Collapse the raw buckets into one word for the fusion layer.
-
-        'speech'  - voice present (talking or singing) -> awake signal
-        'yawn'    - an audible yawn                     -> drowsy signal
-        'silence' - neither stands out                  -> no opinion
-        Speech wins ties with yawn: a driver who is clearly talking is awake
-        even if a yawn-ish sound briefly registers.
+        """Collapse the raw buckets into one word for the fusion layer (see
+        collapse_audio_state for the speech/yawn/silence rule).
 
         `now` is accepted (and ignored) so this shares one call signature with
         FileAudioModel, whose recorded-clip audio must be queried by video time.
         """
-        s = self.get()
-        voice = max(s.get("speech", 0.0), s.get("singing", 0.0))
-        yawn = s.get("yawn", 0.0)
-        if voice >= AUDIO_SPEECH_THRESH and voice >= yawn:
-            return "speech"
-        if yawn >= AUDIO_YAWN_THRESH:
-            return "yawn"
-        return "silence"
+        return collapse_audio_state(self.get())
 
     def stop(self):
         self._stop.set()
@@ -113,12 +148,7 @@ class AudioModel(threading.Thread):
         device = "cuda" if torch.cuda.is_available() else "cpu"
         # checkpoint_path=None -> downloads Cnn14 (~300 MB) to ~/panns_data once.
         model = AudioTagging(checkpoint_path=None, device=device)
-        name_to_idx = {name: i for i, name in enumerate(labels)}
-        bucket_idx = {
-            bucket: [name_to_idx[n] for n in names if n in name_to_idx]
-            for bucket, names in _BUCKET_NAMES.items()
-        }
-        return model, bucket_idx
+        return model, build_bucket_idx(labels)
 
     def run(self):
         try:
@@ -152,11 +182,7 @@ class AudioModel(threading.Thread):
                     # PANNs .inference returns (clipwise_output, embedding);
                     # clipwise_output is clip-level, shape (1, 527).
                     clipwise = model.inference(buf[None, :])[0]  # (1, 527)
-                    scores = clipwise[0]                         # (527,)
-                    latest = {
-                        b: (float(scores[idx].max()) if idx else 0.0)
-                        for b, idx in bucket_idx.items()
-                    }
+                    latest = collapse_scores(clipwise[0], bucket_idx)  # -> buckets
                     with self._lock:
                         self._latest = latest
         except Exception as exc:  # noqa: BLE001 - mic disappeared, etc.

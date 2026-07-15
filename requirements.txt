@@ -22,3 +22,10 @@ pyttsx3>=2.90
 sounddevice>=0.4
 panns-inference>=0.1.1
 torch>=2.0
+
+# --- Trained yawn CNN (optional; needed ONLY for --use-cnn) -----------------
+# yawn_cnn_infer.YawnCNN imports torchvision (MobileNetV2 + transforms). The
+# default run does not use the CNN, so this stays commented to keep the default
+# install unchanged. To enable the CNN: uncomment (or `pip install torchvision`),
+# matching the torch version panns-inference resolves.
+# torchvision>=0.15

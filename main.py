@@ -136,6 +136,10 @@ def main():
                          "the microphone. Pair it with --source (same file) to "
                          "reproduce the live audio+video verdict on a recorded clip, "
                          "e.g. on Colab where there is no mic.")
+    ap.add_argument("--require-audio", action="store_true",
+                    help="OPT-IN: abort if the file-audio model can't initialize "
+                         "(no audio track / ffmpeg / PANNs) instead of silently "
+                         "continuing video-only. Default OFF = today's behavior.")
     ap.add_argument("--no-display", action="store_true",
                     help="don't open a window (headless; useful on a clip)")
     ap.add_argument("--save-video", default=None,
@@ -148,6 +152,15 @@ def main():
     ap.add_argument("--use-cnn", action="store_true",
                     help="use the trained yawn CNN (train/yawn_cnn.pt) for the yawn "
                          "cue instead of the MAR threshold")
+    ap.add_argument("--require-cnn", action="store_true",
+                    help="OPT-IN: with --use-cnn, abort if the yawn CNN can't load "
+                         "instead of silently falling back to the MAR rule. Default "
+                         "OFF = today's graceful fallback is preserved.")
+    ap.add_argument("--log-dir", default=None,
+                    help="OPT-IN: write events.csv / events.jsonl / snapshots under "
+                         "THIS directory instead of the default logs/. Lets a second "
+                         "run keep its own outputs for side-by-side comparison. "
+                         "Default None = the usual logs/ (unchanged).")
     ap.add_argument("--debug", action="store_true",
                     help="print a real-time debug trace (speech detected, yawns, "
                          "drowsy events, and every state transition)")
@@ -156,7 +169,18 @@ def main():
     # One switch turns on all the dbg(...) traces across the modules.
     debug.set_enabled(args.debug)
 
+    # Opt-in guards can only add strictness; they never fire on the default path.
+    if args.require_audio and args.no_audio:
+        ap.error("--require-audio conflicts with --no-audio")
+    if args.require_cnn and not args.use_cnn:
+        ap.error("--require-cnn has no effect without --use-cnn")
+
     use_file = args.source is not None
+    
+    if args.audio_file and not use_file:
+        print("Warning: --audio-file without --source uses wall-clock timing and will "
+            "drift out of sync. Pair it with --source (the same file).")
+
     cap = cv2.VideoCapture(args.source if use_file else args.camera)
     if not cap.isOpened():
         raise IOError(f"Could not open {'file ' + args.source if use_file else 'camera ' + str(args.camera)}")
@@ -165,10 +189,20 @@ def main():
         fps = 30.0
 
     # Build the pipeline.
-    video = VideoModel(use_cnn=args.use_cnn)
+    video = VideoModel(use_cnn=args.use_cnn, require_cnn=args.require_cnn)
     fusion = FusionEngine()
     alerter = AlertManager()
-    logger = EventLogger()
+    # Default (no --log-dir): the usual logs/ paths from config, unchanged. When a
+    # --log-dir is given, a second run keeps its own events.csv/jsonl/snapshots so
+    # the two runs don't overwrite each other.
+    if args.log_dir:
+        from pathlib import Path
+        _ld = Path(args.log_dir)
+        logger = EventLogger(csv_path=_ld / "events.csv",
+                             jsonl_path=_ld / "events.jsonl",
+                             snapshot_dir=_ld / "snapshots")
+    else:
+        logger = EventLogger()
 
     audio = None
     if not args.no_audio:
@@ -181,6 +215,14 @@ def main():
             audio = FileAudioModel(args.audio_file)
             audio.start()
             print(f"  audio: {audio.status}")
+            # OPT-IN only: turn the (default) silent video-only fallback into a
+            # loud abort, so a run flagged --require-audio provably used the audio
+            # model. Without the flag this block is skipped and behavior is today's.
+            if args.require_audio and not audio.status.startswith("ready"):
+                raise SystemExit(
+                    f"--require-audio: audio model did not initialize "
+                    f"({audio.status}). The clip needs an audio track and "
+                    f"ffmpeg + panns-inference must be available.")
         elif not _AUDIO_AVAILABLE:
             print("Audio unavailable (audio_model import failed) - video only.")
         else:
@@ -259,8 +301,11 @@ def main():
 
     print(f"Done. Processed {frame_idx} frames. "
           f"Alarms fired: {alerter.fire_count}. Log: {logger.csv_path}")
-    if save_path is not None:
+    if writer is not None:
         print(f"Annotated video written to: {save_path}")
+    elif save_path is not None:
+        print(f"No annotated video written to {save_path} (no frames were processed).")
+
 
 
 if __name__ == "__main__":

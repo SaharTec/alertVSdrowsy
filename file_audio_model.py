@@ -31,8 +31,10 @@ import wave
 
 import numpy as np
 
-from config import AUDIO_SPEECH_THRESH, AUDIO_YAWN_THRESH
-from audio_model import BUCKETS, _BUCKET_NAMES   # reuse the exact same bucket map
+# Share the mic model's EXACT logic so a recorded run reproduces a live one:
+# same bucket list, same class-index map, same score->state collapse.
+from audio_model import (BUCKETS, build_bucket_idx, collapse_scores,
+                         collapse_audio_state)
 
 SR = 32000            # PANNs Cnn14 expects 32 kHz mono (same as AudioModel)
 WINDOW_SEC = 1.0
@@ -96,21 +98,14 @@ class FileAudioModel:
         return dict(self._latest)
 
     def get_audio_state(self, now=None):
-        """Collapse the current window into one word, EXACTLY like AudioModel:
-        'speech' (voice, awake), 'yawn' (audible yawn), or 'silence'. When `now`
-        (the video clock) is given, first advance to the window covering it."""
+        """Collapse the current window into one word, EXACTLY like AudioModel
+        (shared collapse_audio_state). When `now` (the video clock) is given,
+        first advance to the window covering it."""
         if now is not None and self._ends:
             if self._t0 is None:
                 self._t0 = now
             self._latest = self._lookup(now - self._t0)
-        s = self._latest
-        voice = max(s.get("speech", 0.0), s.get("singing", 0.0))
-        yawn = s.get("yawn", 0.0)
-        if voice >= AUDIO_SPEECH_THRESH and voice >= yawn:
-            return "speech"
-        if yawn >= AUDIO_YAWN_THRESH:
-            return "yawn"
-        return "silence"
+        return collapse_audio_state(self._latest)
 
     def stop(self):
         pass  # nothing to tear down; the whole track was tagged in start()
@@ -130,23 +125,22 @@ class FileAudioModel:
         directly (stdlib `wave`); anything else is piped through ffmpeg first."""
         ext = os.path.splitext(path)[1].lower()
         wav_path, tmp = path, None
-        if ext != ".wav":
-            tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-            tmp.close()
-            cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", path,
-                   "-ac", "1", "-ar", str(SR), "-f", "wav", tmp.name]
-            proc = subprocess.run(cmd, capture_output=True)
-            if proc.returncode != 0 or os.path.getsize(tmp.name) == 0:
-                os.unlink(tmp.name)
-                msg = proc.stderr.decode(errors="ignore")[-200:] or "ffmpeg failed"
-                raise RuntimeError(msg)
-            wav_path = tmp.name
         try:
+            if ext != ".wav":
+                tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+                tmp.close()
+                cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", path,
+                    "-ac", "1", "-ar", str(SR), "-f", "wav", tmp.name]
+                proc = subprocess.run(cmd, capture_output=True)
+                if proc.returncode != 0 or os.path.getsize(tmp.name) == 0:
+                    msg = proc.stderr.decode(errors="ignore")[-200:] or "ffmpeg failed"
+                    raise RuntimeError(msg)
+                wav_path = tmp.name
             with wave.open(wav_path, "rb") as w:
                 sr, nch, sw = w.getframerate(), w.getnchannels(), w.getsampwidth()
                 raw = w.readframes(w.getnframes())
         finally:
-            if tmp is not None:
+            if tmp is not None and os.path.exists(tmp.name):
                 os.unlink(tmp.name)
 
         if sw == 2:
@@ -169,11 +163,7 @@ class FileAudioModel:
 
         device = "cuda" if _cuda_available() else "cpu"
         model = AudioTagging(checkpoint_path=None, device=device)  # downloads once
-        name_to_idx = {name: i for i, name in enumerate(labels)}
-        bucket_idx = {
-            b: [name_to_idx[n] for n in names if n in name_to_idx]
-            for b, names in _BUCKET_NAMES.items()
-        }
+        bucket_idx = build_bucket_idx(labels)
 
         win, hop = int(SR * WINDOW_SEC), int(SR * HOP_SEC)
         ends = list(range(win, len(wav) + 1, hop))       # window END sample indices
@@ -183,12 +173,8 @@ class FileAudioModel:
         for i in range(0, len(windows), BATCH):
             clipwise = model.inference(windows[i:i + BATCH])[0]   # (b, 527)
             for j, e in enumerate(ends[i:i + BATCH]):
-                scores = clipwise[j]
                 self._ends.append(e / SR)
-                self._scores.append({
-                    b: (float(scores[idx].max()) if idx else 0.0)
-                    for b, idx in bucket_idx.items()
-                })
+                self._scores.append(collapse_scores(clipwise[j], bucket_idx))
 
 
 # ---------------------------------------------------------------------------

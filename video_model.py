@@ -150,7 +150,7 @@ def _nod_metric(landmarks, w, h):
 class VideoModel:
     """Per-frame driver reader. Create once, call process(frame) every frame."""
 
-    def __init__(self, use_cnn=False):
+    def __init__(self, use_cnn=False, require_cnn=False):
         self.face_mesh = mp.solutions.face_mesh.FaceMesh(
             max_num_faces=1,
             refine_landmarks=True,
@@ -168,6 +168,14 @@ class VideoModel:
                 print(f"[video] yawn CNN enabled (val F1={self._yawn_cnn.best_val_f1:.3f}); "
                       f"P(yawn) >= {YAWN_CNN_PROB} replaces MAR >= {MAR_YAWN}.")
             except Exception as exc:  # noqa: BLE001 - fall back to the rule path
+                # OPT-IN strictness: only when the caller demanded the CNN do we
+                # refuse to fall back. Default (require_cnn=False) keeps the exact
+                # graceful MAR fallback below.
+                if require_cnn:
+                    raise RuntimeError(
+                        f"--require-cnn: yawn CNN failed to load ({exc}). Ensure "
+                        f"torch+torchvision are installed and train/yawn_cnn.pt exists."
+                    ) from exc
                 print(f"[video] yawn CNN unavailable ({exc}); using the MAR rule.")
                 self._yawn_cnn = None
         # Rolling window of the normalized inner-lip gap -> MMS amplitude/oscillation.
