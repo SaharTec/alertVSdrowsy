@@ -40,7 +40,7 @@ from config import (
     MAR_YAWN, YAWN_MIN_SECONDS, YAWN_CNN_PROB,
     NOD_METRIC_DELTA, NOD_METRIC_MAX, NOD_MIN_SECONDS, NOD_BASELINE_ALPHA,
     NOD_SMOOTH_FRAMES, YAW_FACING_ROAD,
-    MMS_WINDOW_FRAMES, MMS_YAWN_LEVEL, MMS_SPEECH_AMP_MAX, MMS_SPEECH_OSC_MIN,
+    MMS_WINDOW_SECONDS, MMS_YAWN_LEVEL, MMS_SPEECH_AMP_MAX, MMS_SPEECH_OSC_RATE_MIN,
     MMS_MOTION_EPS,
     STATE_ALERT, STATE_DROWSY, STATE_NEUTRAL,
 )
@@ -179,7 +179,7 @@ class VideoModel:
                 print(f"[video] yawn CNN unavailable ({exc}); using the MAR rule.")
                 self._yawn_cnn = None
         # Rolling window of the normalized inner-lip gap -> MMS amplitude/oscillation.
-        self._lip_window = deque(maxlen=MMS_WINDOW_FRAMES)
+        self._lip_window = deque()      # (timestamp, gap); trimmed by time in process()
         # Streak timers for the sustained-condition cues.
         self._eye_streak = _Streak()
         self._yawn_streak = _Streak()
@@ -193,13 +193,23 @@ class VideoModel:
         # Median-filter buffer to remove single-frame spikes in the nod metric.
         self._nod_smooth = deque(maxlen=NOD_SMOOTH_FRAMES)
         # Forward-fill on missed detections (mirrors the parent preprocessing).
+        # There is deliberately no _last_gap here: the lip window takes measured
+        # gaps only, so a stale one would have no reader.
         self._last_valid = [0.0, 0.0, 0.0, 0.0, 0.0]   # ear, mar, yaw, pitch, roll
-        self._last_gap = 0.0
         self._last_nod_metric = 0.5
 
     # -- MMS: classify mouth motion over the rolling window ----------------
+    def lip_gap_level(self):
+        """How wide the mouth got over the window - the MMS 'level'.
+
+        Public because the level is the reliable yawn cue and callers (e.g.
+        train/extract_features.py) want to record it; reaching into _lip_window
+        from outside would break every time its layout changes.
+        """
+        return max((g for _, g in self._lip_window), default=0.0)
+
     def _mouth_state(self):
-        """Return ('speech' | 'yawn' | 'still', amplitude, oscillation).
+        """Return ('speech' | 'yawn' | 'still', amplitude, oscillation, osc_rate).
 
         Calibrated from real clips (see scratchpad/mms_probe). The reliable yawn
         cue is the LEVEL the mouth reached (how wide it opened), not the travel
@@ -209,10 +219,16 @@ class VideoModel:
         guarantees a wide opening is never mislabeled "speech" (the bug that
         suppressed yawn detection). Audio remains the true speech tie-breaker in
         the fusion layer.
+
+        The speech test uses the sign-change RATE, not the raw count: the window
+        holds however many samples the frame rate delivered, so a count would
+        mean different things at 25 and 30 fps. The count is still returned for
+        the logs, but nothing decides on it.
         """
         if len(self._lip_window) < 3:
-            return "still", 0.0, 0
-        g = np.asarray(self._lip_window, dtype=np.float32)
+            return "still", 0.0, 0, 0.0
+        g = np.asarray([v for _, v in self._lip_window], dtype=np.float32)
+        span = self._lip_window[-1][0] - self._lip_window[0][0]
         level = float(g.max())                  # how wide the mouth got
         amplitude = float(g.max() - g.min())    # how far it travelled
 
@@ -222,14 +238,15 @@ class VideoModel:
         signs = np.sign(np.where(np.abs(vel) < MMS_MOTION_EPS, 0.0, vel))
         signs = signs[signs != 0]
         oscillation = int(np.sum(signs[1:] != signs[:-1])) if len(signs) > 1 else 0
+        osc_rate = (oscillation / span) if span > 0 else 0.0
 
         # Wide opening -> yawn shape (held-open yawns included).
         if level >= MMS_YAWN_LEVEL:
-            return "yawn", amplitude, oscillation
+            return "yawn", amplitude, oscillation, osc_rate
         # Small, busy motion -> talking.
-        if amplitude <= MMS_SPEECH_AMP_MAX and oscillation >= MMS_SPEECH_OSC_MIN:
-            return "speech", amplitude, oscillation
-        return "still", amplitude, oscillation
+        if amplitude <= MMS_SPEECH_AMP_MAX and osc_rate >= MMS_SPEECH_OSC_RATE_MIN:
+            return "speech", amplitude, oscillation, osc_rate
+        return "still", amplitude, oscillation, osc_rate
 
     def process(self, frame, now=None):
         """Read one BGR frame. Returns the per-frame dict described in the module docstring."""
@@ -253,17 +270,29 @@ class VideoModel:
             nm = _nod_metric(landmarks, w, h)
             nod_metric = nm if nm is not None else self._last_nod_metric
             self._last_valid = [ear, mar, yaw, pitch, roll]
-            self._last_gap = gap
             self._last_nod_metric = nod_metric
         else:
-            # Forward-fill so the streak/MMS timing stays in real time.
+            # Forward-fill so the streak timing stays in real time. `gap` is not
+            # forward-filled: see the lip-window append below.
             ear, mar, yaw, pitch, roll = self._last_valid
-            gap = self._last_gap
+            gap = None
             nod_metric = self._last_nod_metric
 
         # ---- MMS over the rolling lip-gap window -------------------------
-        self._lip_window.append(gap)
-        mouth_state, mms_amp, mms_osc = self._mouth_state()
+        # Trimmed by TIME, so the window spans MMS_WINDOW_SECONDS whatever the
+        # frame rate - a fixed maxlen made the span a function of the hardware.
+        # Only a MEASURED gap enters the window: the forward-filled value above
+        # is a guess about a mouth we cannot see, and feeding it here let the
+        # mouth cue keep reporting through a dropout (_nod_smooth below already
+        # gates on face_found - this cue was the inconsistent one). Trimming
+        # still runs, so a dropout drains the window by time and _mouth_state
+        # falls back to "still": no face, no claim about the mouth.
+        if face_found:
+            self._lip_window.append((now, gap))
+        cutoff = now - MMS_WINDOW_SECONDS
+        while self._lip_window and self._lip_window[0][0] < cutoff:
+            self._lip_window.popleft()
+        mouth_state, mms_amp, mms_osc, mms_osc_rate = self._mouth_state()
 
         # ---- Nod: the nose-in-eyes->chin ratio drops below its resting value -
         facing_road = abs(yaw) <= YAW_FACING_ROAD
@@ -326,6 +355,7 @@ class VideoModel:
             "ear": ear, "mar": mar, "yaw": yaw, "pitch": pitch, "roll": roll,
             "nod_metric": round(nm_s, 4),
             "mms_amplitude": mms_amp, "mms_oscillation": mms_osc,
+            "mms_osc_rate": round(mms_osc_rate, 3),   # the value the speech test uses
             "yawn_prob": round(yawn_prob, 3),   # CNN P(yawn); 0.0 when CNN disabled
             "mouth_state": mouth_state,
             "eyes_closed": eyes_closed, "yawning": yawning, "nodding": nodding,
@@ -340,9 +370,10 @@ class VideoModel:
 
 
 # ---------------------------------------------------------------------------
-# Tiny self-test: prove the module loads and process() runs end-to-end without
-# a real face. We feed a synthetic black frame (no face) and confirm we get a
-# NEUTRAL reading back instead of crashing. Run: python video_model.py
+# Self-test. No real face is available here, so the tests that need landmark
+# geometry drive _mouth_state by filling _lip_window directly - legitimate for a
+# same-module unit test, and the only way to exercise the MMS maths offline.
+# Run: python video_model.py   (exits non-zero on failure)
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import sys
@@ -351,12 +382,78 @@ if __name__ == "__main__":
     except AttributeError:
         pass
 
+    _passed = True
+
+    def check(name, ok, detail=""):
+        global _passed
+        _passed &= bool(ok)
+        print(f"  [{'OK' if ok else 'FAIL'}] {name}{'  ' + detail if detail else ''}")
+
+    print("video_model self-test:")
+
+    # -- 1. process() survives a frame with no face ------------------------
     vm = VideoModel()
     blank = np.zeros((480, 640, 3), dtype=np.uint8)
     out = vm.process(blank)
+    check("blank frame -> no face", out["face_found"] is False)
+    check("blank frame -> NEUTRAL", out["state"] == STATE_NEUTRAL,
+          f"got {out['state']}")
+    check("blank frame -> mouth 'still'", out["mouth_state"] == "still",
+          f"got {out['mouth_state']}")
+
+    # -- 2. _Streak: onset, grace, and reset -------------------------------
+    s = _Streak(grace=0.3)
+    check("streak: idle -> 0s", s.duration(0.0) == 0.0)
+    for t in (0.0, 0.5, 1.0):
+        s.update(True, t)
+    check("streak: 1s of activity -> 1s", s.duration(1.0) == 1.0)
+    s.update(False, 1.2)          # a 0.2s gap is inside the 0.3s grace
+    check("streak: blink inside grace survives", s.duration(1.2) == 1.2,
+          f"got {s.duration(1.2)}")
+    s.update(False, 1.4)          # 0.4s since last active: past grace
+    check("streak: gap past grace resets", s.duration(1.4) == 0.0,
+          f"got {s.duration(1.4)}")
+
+    # -- 3. MMS is frame-rate invariant (the Phase 3.1 regression) ---------
+    # A 6 Hz lip oscillation is talking at any frame rate. Before the window
+    # became time-based and oscillation became a RATE, the same mouth read
+    # differently at 25 and 30 fps - a hardware-dependent verdict.
+    def mms_at(fps, signal):
+        m = VideoModel.__new__(VideoModel)      # no FaceMesh needed for _mouth_state
+        m._lip_window = deque()
+        n = int(MMS_WINDOW_SECONDS * fps)
+        for i in range(n):
+            t = i / fps
+            m._lip_window.append((t, signal(t)))
+        return m._mouth_state()[0]
+
+    talking = lambda t: 0.05 + 0.03 * np.sin(2 * np.pi * 6.0 * t)
+    at25, at30 = mms_at(25.0, talking), mms_at(30.0, talking)
+    check("MMS: talking reads 'speech' at 25 fps", at25 == "speech", f"got {at25}")
+    check("MMS: talking reads 'speech' at 30 fps", at30 == "speech", f"got {at30}")
+    check("MMS: 25 fps and 30 fps agree", at25 == at30, f"{at25} vs {at30}")
+
+    wide = lambda t: 0.40                        # a held-open yawn: no travel
+    check("MMS: held-open mouth reads 'yawn' at both rates",
+          mms_at(25.0, wide) == "yawn" == mms_at(30.0, wide))
+
+    # -- 4. Face dropout drains the lip window (the Phase 3.3 regression) --
+    # The forward-filled gap used to enter the window, so the mouth cue kept
+    # reporting a mouth nobody could see: a yawn frozen at the moment tracking
+    # was lost would read "yawn" forever. Now only measured gaps enter, so the
+    # window ages out and the cue goes quiet.
+    for i in range(15):                          # seed a wide-open mouth
+        vm._lip_window.append((i / 30.0, 0.40))
+    check("dropout: window starts on a yawn", vm._mouth_state()[0] == "yawn")
+    t = 0.5
+    for _ in range(30):                          # 1s of no-face frames
+        out = vm.process(blank, now=t)
+        t += 1 / 30.0
+    check("dropout: stale gaps do not persist", len(vm._lip_window) == 0,
+          f"{len(vm._lip_window)} samples left")
+    check("dropout: mouth cue falls silent", out["mouth_state"] == "still",
+          f"got {out['mouth_state']}")
     vm.close()
-    print("video_model self-test OK")
-    print(f"  face_found = {out['face_found']}  (expected False on a blank frame)")
-    print(f"  state      = {out['state']}  (expected NEUTRAL)")
-    print(f"  mouth_state= {out['mouth_state']}  mms_amp={out['mms_amplitude']:.3f}")
-    print("  keys:", sorted(out.keys()))
+
+    print("video_model self-test", "OK" if _passed else "had FAILURES")
+    sys.exit(0 if _passed else 1)

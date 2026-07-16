@@ -1,0 +1,152 @@
+[eval] val-b: 11 subjects -> ['12-MaleGlasses', '15-MaleNoGlasses', '20-FemaleNoGlasses', '28-MaleNoGlasses', '38-MaleNoGlasses', '40-FemaleNoGlasses', '41-FemaleGlasses', '41-MaleNoGlasses', '5-FemaleGlasses', '6-FemaleNoGlasses', 'speaking002']
+[eval] 1/31 Yawning/12-MaleGlasses-Yawning.avi
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+W0000 00:00:1784208133.843812   23712 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208133.856654   21544 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+E:\sahar\pythonCorss\lib\site-packages\google\protobuf\symbol_database.py:55: UserWarning: SymbolDatabase.GetPrototype() is deprecated. Please use message_factory.GetMessageClass() instead. SymbolDatabase.GetPrototype() will be removed soon.
+  warnings.warn('SymbolDatabase.GetPrototype() is deprecated. Please '
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 2/31 Yawning/15-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784208151.422181   11500 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208151.434483   16732 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 3/31 Yawning/20-FemaleNoGlasses-Yawning.avi
+W0000 00:00:1784208160.902380    8716 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208160.918359   11340 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 4/31 Yawning/28-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784208174.327411   10444 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208174.338124   11364 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 5/31 Yawning/38-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784208182.595913   20708 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208182.610606    5648 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 6/31 Yawning/40-FemaleNoGlasses-Yawning.avi
+W0000 00:00:1784208190.565027   22996 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208190.581028   17536 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 7/31 Yawning/41-FemaleGlasses-Yawning.avi
+W0000 00:00:1784208201.505004    3276 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208201.516616    3276 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 8/31 Yawning/41-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784208210.997292    8736 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208211.008437    3288 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 9/31 Yawning/5-FemaleGlasses-Yawning.avi
+W0000 00:00:1784208221.117023    6072 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208221.128957   22448 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 10/31 Yawning/6-FemaleNoGlasses-Yawning.avi
+W0000 00:00:1784208233.663391    9500 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208233.678687    6656 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 11/31 Singing/12-MaleGlasses-Talking.avi
+W0000 00:00:1784208243.405548   12992 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208243.415995   14920 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 12/31 Singing/15-MaleNoGlasses-Talking.avi
+W0000 00:00:1784208262.683904   21760 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208262.700234    6708 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 13/31 Singing/20-FemaleNoGlasses-Talking.avi
+W0000 00:00:1784208275.817053    5448 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208275.827811   18428 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 14/31 Singing/28-MaleNoGlasses-Talking.avi
+W0000 00:00:1784208287.954316    6664 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208287.966335    6664 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 15/31 Singing/38-MaleNoGlasses-Talking.avi
+W0000 00:00:1784208303.216395   11572 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208303.232475   12492 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 16/31 Singing/40-FemaleNoGlasses-Talking.avi
+W0000 00:00:1784208316.485656   21896 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208316.496938    9232 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 17/31 Singing/41-FemaleGlasses-Talking.avi
+W0000 00:00:1784208330.025297   10124 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208330.036451   14520 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 18/31 Singing/41-MaleNoGlasses-Talking.avi
+W0000 00:00:1784208341.106317   18516 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208341.116675   18516 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 19/31 Singing/5-FemaleGlasses-Talking.avi
+W0000 00:00:1784208357.713250    5444 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208357.724125   25356 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 20/31 Singing/6-FemaleNoGlasses-Talking.avi
+W0000 00:00:1784208374.609320   24584 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208374.619910   12616 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 21/31 Singing/speaking002.mp4
+W0000 00:00:1784208390.729721   24556 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208390.744757    1760 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 22/31 Alert/12-MaleGlasses-Normal.avi
+W0000 00:00:1784208403.126616   12080 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208403.138112   11292 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 23/31 Alert/15-MaleNoGlasses-Normal.avi
+W0000 00:00:1784208413.772235    3324 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208413.783335    2228 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 24/31 Alert/20-FemaleNoGlasses-Normal.avi
+W0000 00:00:1784208424.582041    4588 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208424.595191   13552 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 25/31 Alert/28-MaleNoGlasses-Normal.avi
+W0000 00:00:1784208438.185388    8052 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208438.198016   20036 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 26/31 Alert/38-MaleNoGlasses-Normal.avi
+W0000 00:00:1784208447.680243   24100 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208447.692416   11612 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 27/31 Alert/40-FemaleNoGlasses-Normal.avi
+W0000 00:00:1784208458.186624   11864 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208458.198981    7960 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 28/31 Alert/41-FemaleGlasses-Normal.avi
+W0000 00:00:1784208466.898187    5204 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208466.908722    9696 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 29/31 Alert/41-MaleNoGlasses-Normal.avi
+W0000 00:00:1784208475.367917    4132 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208475.379657   22856 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 30/31 Alert/5-FemaleGlasses-Normal.avi
+W0000 00:00:1784208490.628804   23692 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208490.646542    5336 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+[eval] 31/31 Alert/6-FemaleNoGlasses-Normal.avi
+W0000 00:00:1784208503.254185   20900 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784208503.273897   13772 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[video] yawn CNN enabled (val F1=0.666); P(yawn) >= 0.83 replaces MAR >= 0.6.
+
+=== run ===
+  commit=709d813  cnn=True  stride=1  subjects=val-b (n=11)
+  thresholds: MAR_YAWN=0.6 YAWN_CNN_PROB=0.83 YAWN_MIN_SECONDS=1.2  learned_thresholds=False
+  audio: silence (Yawning clips have no audio track)
+
+=== Level A - yawn cue events ===
+  clips=31 (pos=10 neg=21) subjects=11
+  event recall            100.0%  (14/14)   95% CI [100.0%, 100.0%]
+  mean IoU                0.578
+  onset latency (s)       median=1.53  IQR=[1.37, 1.63]
+  false yawn events/min   0.911  (over 8.78 min of Singing+Alert)
+
+=== Level B - fused DROWSY ===
+  recall, any cue         100.0%
+  recall, yawn cue only   92.9%
+  neg DROWSY/min by cue   {'eyes': 1.481, 'yawn': 0.684, 'nod': 0.114}
+
+=== health / speed (guard, not a goal) ===
+  face found (mean)       99.7%
+  process() ms p50/p95    15.67 / 20.23
+
+[eval] wrote reports/mmsfix_cnn083_valb.json

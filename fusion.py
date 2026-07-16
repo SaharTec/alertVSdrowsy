@@ -42,6 +42,10 @@ class FusionResult:
     # aggregates kept for the HUD / logs
     drowsy_frac: float = 0.0
     alert_frac: float = 0.0
+    # Per-cue window fractions {eyes, yawn, nod, speech}: which cue(s) actually
+    # drove this verdict. Lets a caller attribute a DROWSY window to a cause
+    # (eyes vs yawn vs nod) without parsing the human-readable `reasons` strings.
+    cue_fracs: dict = field(default_factory=dict)
     audio_state: str = "silence"
     # which sensor(s) heard the driver talk this window (Rule 5): "Audio",
     # "Video/Lip Movement", "Audio + Video", or None when no speech.
@@ -113,6 +117,8 @@ class FusionEngine:
         f_drowsy = self._drowsy / n
         f_alert = self._alert / n
         audio_state = max(self._audio_votes, key=self._audio_votes.get)
+        cue_fracs = {"eyes": round(f_eyes, 3), "yawn": round(f_yawn, 3),
+                     "nod": round(f_nod, 3), "speech": round(f_speech, 3)}
 
         # ---- Speech modality: which sensor(s) actually heard talking --------
         # Computed from the RAW signals (audio vote vs. visual lip motion) so the
@@ -144,10 +150,16 @@ class FusionEngine:
                 alert_ev += WEIGHT_AUDIO
                 reasons.append("audio: voice")
             else:
-                return FusionResult(STATE_NEUTRAL, 0.0,
-                                    ["audio without lip movement"], is_new=True,
-                                    audio_state=audio_state,
-                                    speech_modality=speech_modality)
+                # A voice with no lip movement is not THIS driver: a passenger, the
+                # radio, someone outside. It therefore says nothing about the
+                # driver's state and adds no evidence to either side.
+                # It used to return NEUTRAL here, throwing away every drowsy cue
+                # the camera had collected for the window - so a driver yawning
+                # silently next to a talking passenger was reported NEUTRAL.
+                # Crediting ALERT instead would be the opposite error: the driver
+                # doesn't become alert because someone else spoke. So: abstain,
+                # and let the camera's evidence decide.
+                reasons.append("audio: a voice, but not the driver's")
         elif audio_state == "yawn":
             drowsy_ev += WEIGHT_AUDIO
             reasons.append("audio: yawn")
@@ -185,6 +197,7 @@ class FusionEngine:
             is_new=True,
             drowsy_frac=round(f_drowsy, 3),
             alert_frac=round(f_alert, 3),
+            cue_fracs=cue_fracs,
             audio_state=audio_state,
             speech_modality=speech_modality,
         )
@@ -229,4 +242,20 @@ if __name__ == "__main__":
     passed &= run("open mouth but mic hears speech (tie-break -> ALERT)",
                   frame(STATE_NEUTRAL, mouth="speech"), "speech",
                   STATE_ALERT)
+    # The regression this pins: a driver yawning SILENTLY while a passenger or the
+    # radio talks. The mic hears a voice, the driver's own lips aren't moving, and
+    # fusion used to answer NEUTRAL - discarding a window that was 100% yawning.
+    # The camera's evidence must survive a voice that isn't the driver's.
+    passed &= run("silent yawn + a passenger talking -> still DROWSY",
+                  frame(STATE_DROWSY, yawn=True, mouth="yawn"), "speech",
+                  STATE_DROWSY)
+    # ...but a voice with no lip movement must not make a drowsy driver look ALERT
+    # either: with no visual evidence at all there is nothing to report.
+    passed &= run("a voice, nobody's lips moving -> NEUTRAL",
+                  frame(STATE_NEUTRAL, mouth="still"), "speech",
+                  STATE_NEUTRAL)
     print("fusion self-test", "OK" if passed else "had FAILURES")
+    # Exit non-zero on failure: this test printed FAIL and still exited 0, so
+    # nothing (a CI job, a pre-commit hook, a human in a hurry) could ever catch a
+    # regression by running it.
+    sys.exit(0 if passed else 1)

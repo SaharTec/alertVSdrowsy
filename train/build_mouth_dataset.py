@@ -266,6 +266,23 @@ def _run_selftest():
         flag = "" if got == want else "  <-- MISMATCH"
         ok = ok and got == want
         print(f"  subject_of({name!r}) = {got!r} (expect {want!r}){flag}")
+
+    # The two properties every subject-grouped split silently depends on. If
+    # either breaks, the split still runs and still prints a subject count - it
+    # just stops meaning what it says, and every held-out number becomes a lie.
+    #
+    # (a) One person's clips MUST collapse to one id across classes. YawDD films
+    #     the same driver yawning and talking; if these split, the same face
+    #     lands in train and val and every reported score is optimistic.
+    same = subject_of("11-MaleGlasses-Yawning.avi") == subject_of("11-MaleGlasses-Talking.avi")
+    ok = ok and same
+    print(f"  [{'OK' if same else 'FAIL'}] same person across classes -> one subject")
+    # (b) Different people MUST NOT collapse. YawDD reuses the leading number:
+    #     10-Female... and 10-Male... are two drivers. Keying on the number alone
+    #     would merge them and over-restrict the split.
+    distinct = subject_of("10-FemaleNoGlasses-Normal.avi") != subject_of("10-MaleNoGlasses-Normal.avi")
+    ok = ok and distinct
+    print(f"  [{'OK' if distinct else 'FAIL'}] same number, different people -> distinct subjects")
     # mouth_box: a 100x40 mouth centred at (300,250) in a 640x480 frame.
     pts = [[250, 230], [350, 230], [250, 270], [350, 270]]
     box = mouth_box(pts, 640, 480, margin=2.0)

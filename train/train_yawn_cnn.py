@@ -95,6 +95,22 @@ def subject_split(rows, val_frac, seed):
     return [rows[i] for i in tr_idx], [rows[i] for i in va_idx]
 
 
+def halve_val_subjects(val_rows, seed):
+    """Split the held-out SUBJECTS into halves A and B.
+
+    Choosing an operating point (a probability threshold) and then reporting the
+    score at that point on the same data inflates the result - the threshold was
+    fitted to those very faces. So: sweep on A, report on B. Neither half may
+    come from the training subjects, which the model has already memorized.
+    Returns (subjects_a, subjects_b) as sets. Defined here, next to
+    subject_split, so every script that needs this split gets the same one.
+    """
+    subs = sorted({r["subject"] for r in val_rows})
+    random.Random(seed).shuffle(subs)
+    cut = len(subs) // 2
+    return set(subs[:cut]), set(subs[cut:])
+
+
 def make_transforms(size):
     train_tf = transforms.Compose([
         transforms.Resize((size, size)),

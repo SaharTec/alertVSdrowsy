@@ -181,6 +181,16 @@ def main():
         print("Warning: --audio-file without --source uses wall-clock timing and will "
             "drift out of sync. Pair it with --source (the same file).")
 
+    # A file run with neither --audio-file nor --no-audio opens the MICROPHONE and
+    # tags the room while "analyzing" the clip, mixing room audio into what reads
+    # as a video-only result. Error rather than auto-disabling: an auto-fallback
+    # changes behavior invisibly, one explicit flag does not.
+    if use_file and not args.audio_file and not args.no_audio:
+        ap.error("--source without --audio-file would use the MICROPHONE for the audio "
+                 "sense, tagging the room instead of the clip. Pass --no-audio for a "
+                 "video-only run, or --audio-file <same file> to use the clip's own "
+                 "soundtrack.")
+
     cap = cv2.VideoCapture(args.source if use_file else args.camera)
     if not cap.isOpened():
         raise IOError(f"Could not open {'file ' + args.source if use_file else 'camera ' + str(args.camera)}")
@@ -195,14 +205,16 @@ def main():
     # Default (no --log-dir): the usual logs/ paths from config, unchanged. When a
     # --log-dir is given, a second run keeps its own events.csv/jsonl/snapshots so
     # the two runs don't overwrite each other.
+    src_id = args.source if use_file else f"camera:{args.camera}"
     if args.log_dir:
         from pathlib import Path
         _ld = Path(args.log_dir)
         logger = EventLogger(csv_path=_ld / "events.csv",
                              jsonl_path=_ld / "events.jsonl",
-                             snapshot_dir=_ld / "snapshots")
+                             snapshot_dir=_ld / "snapshots",
+                             source=src_id)
     else:
-        logger = EventLogger()
+        logger = EventLogger(source=src_id)
 
     audio = None
     if not args.no_audio:

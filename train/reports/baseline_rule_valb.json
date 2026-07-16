@@ -1,0 +1,1043 @@
+{
+  "manifest": {
+    "git_commit": "709d813",
+    "use_cnn": false,
+    "stride": 1,
+    "subjects_scope": "val-b",
+    "n_subjects_selected": 11,
+    "audio": "silence (Yawning clips have no audio track)",
+    "learned_thresholds_present": false,
+    "thresholds": {
+      "MAR_YAWN": 0.6,
+      "YAWN_CNN_PROB": 0.5,
+      "YAWN_MIN_SECONDS": 1.2,
+      "EAR_CLOSED": 0.2,
+      "EYE_CLOSED_SECONDS": 1.0,
+      "MMS_YAWN_LEVEL": 0.3,
+      "MMS_SPEECH_AMP_MAX": 0.18,
+      "MMS_SPEECH_OSC_MIN": 2,
+      "MMS_WINDOW_FRAMES": 15,
+      "FUSION_INTERVAL_SECONDS": 1.5
+    }
+  },
+  "aggregate": {
+    "n_clips": 31,
+    "n_pos_clips": 10,
+    "n_neg_clips": 21,
+    "n_subjects": 11,
+    "yawn_event_recall": 0.8571428571428571,
+    "n_gt_events": 14,
+    "n_matched": 12,
+    "mean_iou": 0.394,
+    "latency_median": 1.94,
+    "latency_iqr": [
+      1.84,
+      2.07
+    ],
+    "false_yawn_events_per_min": 0.0,
+    "neg_minutes": 8.78,
+    "drowsy_recall_any_cue": 0.9285714285714286,
+    "drowsy_recall_yawn_cue": 0.6428571428571429,
+    "neg_drowsy_per_min_by_cue": {
+      "eyes": 1.481
+    },
+    "face_frac_mean": 0.997,
+    "process_ms_p50": 5.21,
+    "process_ms_p95": 7.25
+  },
+  "recall_ci95": [
+    0.7059,
+    1.0
+  ],
+  "clips": [
+    {
+      "clip": "12-MaleGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "12-MaleGlasses",
+      "fps": 29.97,
+      "duration": 32.7,
+      "face_frac": 1.0,
+      "n_gt": 2,
+      "n_pred": 2,
+      "matched": 2,
+      "ious": [
+        0.5555555555555555,
+        0.5967078189300413
+      ],
+      "latencies": [
+        1.6683333873317245,
+        2.035366732544702
+      ],
+      "gt": [
+        [
+          6.239566868620647,
+          11.945267053295144
+        ],
+        [
+          19.986633980234053,
+          28.09473424266623
+        ]
+      ],
+      "drowsy_any": [
+        [
+          7.507500242992758,
+          9.00900029159131
+        ],
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          10.51050034018986,
+          12.012000388788412
+        ],
+        [
+          21.02100068037972,
+          22.522500728978272
+        ],
+        [
+          22.522500728978272,
+          24.024000777576823
+        ],
+        [
+          24.024000777576823,
+          25.525500826175378
+        ],
+        [
+          25.525500826175378,
+          27.02700087477393
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          7.507500242992758,
+          9.00900029159131
+        ],
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          10.51050034018986,
+          12.012000388788412
+        ],
+        [
+          21.02100068037972,
+          22.522500728978272
+        ],
+        [
+          22.522500728978272,
+          24.024000777576823
+        ],
+        [
+          24.024000777576823,
+          25.525500826175378
+        ],
+        [
+          25.525500826175378,
+          27.02700087477393
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 7
+      }
+    },
+    {
+      "clip": "15-MaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "15-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 18.72,
+      "face_frac": 1.0,
+      "n_gt": 2,
+      "n_pred": 2,
+      "matched": 2,
+      "ious": [
+        0.3973509933774836,
+        0.5031446540880503
+      ],
+      "latencies": [
+        1.9352667293047996,
+        1.3346667098653793
+      ],
+      "gt": [
+        [
+          1.7684333905716274,
+          6.806800220313434
+        ],
+        [
+          10.744067014416302,
+          16.049367186131185
+        ]
+      ],
+      "drowsy_any": [
+        [
+          3.003000097197103,
+          4.504500145795655
+        ],
+        [
+          4.504500145795655,
+          6.006000194394206
+        ],
+        [
+          12.012000388788412,
+          13.513500437386964
+        ],
+        [
+          13.513500437386964,
+          15.015000485985516
+        ],
+        [
+          15.015000485985516,
+          16.51650053458407
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          3.003000097197103,
+          4.504500145795655
+        ],
+        [
+          4.504500145795655,
+          6.006000194394206
+        ],
+        [
+          12.012000388788412,
+          13.513500437386964
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 3,
+        "eyes": 2
+      }
+    },
+    {
+      "clip": "20-FemaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "20-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 25.46,
+      "face_frac": 1.0,
+      "n_gt": 2,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.05298013245033105
+      ],
+      "latencies": [
+        1.9352667293048
+      ],
+      "gt": [
+        [
+          5.505500178194689,
+          10.176833662723515
+        ],
+        [
+          19.119100618821555,
+          24.157467448563363
+        ]
+      ],
+      "drowsy_any": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ],
+        [
+          7.507500242992758,
+          9.00900029159131
+        ],
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          12.012000388788412,
+          13.513500437386964
+        ],
+        [
+          19.51950063178117,
+          21.02100068037972
+        ],
+        [
+          21.02100068037972,
+          22.522500728978272
+        ],
+        [
+          22.522500728978272,
+          24.024000777576823
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 6,
+        "nod": 1
+      }
+    },
+    {
+      "clip": "28-MaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "28-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 16.12,
+      "face_frac": 1.0,
+      "n_gt": 1,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.5035460992907799
+      ],
+      "latencies": [
+        1.5682333840918208
+      ],
+      "gt": [
+        [
+          5.005000161995172,
+          9.709700314270634
+        ]
+      ],
+      "drowsy_any": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ],
+        [
+          7.507500242992758,
+          9.00900029159131
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ],
+        [
+          7.507500242992758,
+          9.00900029159131
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 2
+      }
+    },
+    {
+      "clip": "38-MaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "38-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 15.35,
+      "face_frac": 1.0,
+      "n_gt": 1,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.3688524590163935
+      ],
+      "latencies": [
+        1.8351667260648963
+      ],
+      "gt": [
+        [
+          5.43876684270142,
+          9.509500307790827
+        ]
+      ],
+      "drowsy_any": [
+        [
+          7.507500242992758,
+          9.00900029159131
+        ],
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          10.51050034018986,
+          12.012000388788412
+        ],
+        [
+          13.513500437386964,
+          15.015000485985516
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          7.507500242992758,
+          9.00900029159131
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 1,
+        "eyes": 3
+      }
+    },
+    {
+      "clip": "40-FemaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "40-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 22.76,
+      "face_frac": 0.931,
+      "n_gt": 1,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.07894736842105285
+      ],
+      "latencies": [
+        2.3023000745177793
+      ],
+      "gt": [
+        [
+          8.842166952858136,
+          12.645967075974468
+        ]
+      ],
+      "drowsy_any": [
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          10.51050034018986,
+          12.012000388788412
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 2
+      }
+    },
+    {
+      "clip": "41-FemaleGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "41-FemaleGlasses",
+      "fps": 29.97,
+      "duration": 18.99,
+      "face_frac": 1.0,
+      "n_gt": 1,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.16129032258064482
+      ],
+      "latencies": [
+        1.9352667293048
+      ],
+      "gt": [
+        [
+          5.905900191154303,
+          9.00900029159131
+        ]
+      ],
+      "drowsy_any": [
+        [
+          7.507500242992758,
+          9.00900029159131
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "nod": 1
+      }
+    },
+    {
+      "clip": "41-MaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "41-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 20.02,
+      "face_frac": 1.0,
+      "n_gt": 1,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.35433070866141764
+      ],
+      "latencies": [
+        2.068733400291337
+      ],
+      "gt": [
+        [
+          4.304300139315848,
+          8.541866943138427
+        ]
+      ],
+      "drowsy_any": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 1
+      }
+    },
+    {
+      "clip": "5-FemaleGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "5-FemaleGlasses",
+      "fps": 29.97,
+      "duration": 24.59,
+      "face_frac": 0.999,
+      "n_gt": 2,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.45985401459853975
+      ],
+      "latencies": [
+        2.2022000712778773
+      ],
+      "gt": [
+        [
+          4.47113347804902,
+          9.576233643284095
+        ],
+        [
+          13.813800447106674,
+          18.385033928395597
+        ]
+      ],
+      "drowsy_any": [
+        [
+          15.015000485985516,
+          16.51650053458407
+        ],
+        [
+          16.51650053458407,
+          18.01800058318262
+        ],
+        [
+          18.01800058318262,
+          19.51950063178117
+        ],
+        [
+          19.51950063178117,
+          21.02100068037972
+        ],
+        [
+          21.02100068037972,
+          22.522500728978272
+        ],
+        [
+          22.522500728978272,
+          24.024000777576823
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          15.015000485985516,
+          16.51650053458407
+        ],
+        [
+          16.51650053458407,
+          18.01800058318262
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 2,
+        "nod": 4
+      }
+    },
+    {
+      "clip": "6-FemaleNoGlasses-Yawning.avi",
+      "class": "Yawning",
+      "subject": "6-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 18.72,
+      "face_frac": 1.0,
+      "n_gt": 1,
+      "n_pred": 1,
+      "matched": 1,
+      "ious": [
+        0.6971830985915494
+      ],
+      "latencies": [
+        2.1688334035312407
+      ],
+      "gt": [
+        [
+          3.7704334553696963,
+          13.246567095413889
+        ]
+      ],
+      "drowsy_any": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ],
+        [
+          7.507500242992758,
+          9.00900029159131
+        ],
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          10.51050034018986,
+          12.012000388788412
+        ],
+        [
+          12.012000388788412,
+          13.513500437386964
+        ]
+      ],
+      "drowsy_yawn": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ],
+        [
+          7.507500242992758,
+          9.00900029159131
+        ],
+        [
+          9.00900029159131,
+          10.51050034018986
+        ],
+        [
+          10.51050034018986,
+          12.012000388788412
+        ]
+      ],
+      "drowsy_by_cue": {
+        "yawn": 4,
+        "eyes": 1
+      }
+    },
+    {
+      "clip": "12-MaleGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "12-MaleGlasses",
+      "fps": 29.97,
+      "duration": 37.5,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [
+        [
+          30.03000097197103,
+          31.531501020569582
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 1
+      }
+    },
+    {
+      "clip": "15-MaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "15-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 25.46,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "20-FemaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "20-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 23.92,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "28-MaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "28-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 28.09,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "38-MaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "38-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 25.33,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [
+        [
+          6.006000194394206,
+          7.507500242992758
+        ],
+        [
+          16.51650053458407,
+          18.01800058318262
+        ],
+        [
+          18.01800058318262,
+          19.51950063178117
+        ],
+        [
+          19.51950063178117,
+          21.02100068037972
+        ],
+        [
+          21.02100068037972,
+          22.522500728978272
+        ],
+        [
+          22.522500728978272,
+          24.024000777576823
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 6
+      }
+    },
+    {
+      "clip": "40-FemaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "40-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 27.69,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [
+        [
+          25.525500826175378,
+          27.02700087477393
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 1
+      }
+    },
+    {
+      "clip": "41-FemaleGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "41-FemaleGlasses",
+      "fps": 29.97,
+      "duration": 22.62,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [
+        [
+          4.504500145795655,
+          6.006000194394206
+        ],
+        [
+          19.51950063178117,
+          21.02100068037972
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 2
+      }
+    },
+    {
+      "clip": "41-MaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "41-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 33.43,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "5-FemaleGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "5-FemaleGlasses",
+      "fps": 29.97,
+      "duration": 34.2,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "6-FemaleNoGlasses-Talking.avi",
+      "class": "Singing",
+      "subject": "6-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 32.63,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "speaking002.mp4",
+      "class": "Singing",
+      "subject": "speaking002",
+      "fps": 29.93,
+      "duration": 20.28,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "12-MaleGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "12-MaleGlasses",
+      "fps": 29.97,
+      "duration": 21.49,
+      "face_frac": 0.995,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "15-MaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "15-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 21.32,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "20-FemaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "20-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 27.09,
+      "face_frac": 0.991,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "28-MaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "28-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 18.02,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [
+        [
+          1.5015000485985515,
+          3.003000097197103
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 1
+      }
+    },
+    {
+      "clip": "38-MaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "38-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 20.62,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "40-FemaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "40-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 17.52,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [
+        [
+          4.504500145795655,
+          6.006000194394206
+        ],
+        [
+          15.015000485985516,
+          16.51650053458407
+        ]
+      ],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {
+        "eyes": 2
+      }
+    },
+    {
+      "clip": "41-FemaleGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "41-FemaleGlasses",
+      "fps": 29.97,
+      "duration": 16.88,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "41-MaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "41-MaleNoGlasses",
+      "fps": 29.97,
+      "duration": 29.9,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "5-FemaleGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "5-FemaleGlasses",
+      "fps": 29.97,
+      "duration": 22.46,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    },
+    {
+      "clip": "6-FemaleNoGlasses-Normal.avi",
+      "class": "Alert",
+      "subject": "6-FemaleNoGlasses",
+      "fps": 29.97,
+      "duration": 20.25,
+      "face_frac": 1.0,
+      "n_gt": 0,
+      "n_pred": 0,
+      "matched": 0,
+      "ious": [],
+      "latencies": [],
+      "gt": [],
+      "drowsy_any": [],
+      "drowsy_yawn": [],
+      "drowsy_by_cue": {}
+    }
+  ]
+}

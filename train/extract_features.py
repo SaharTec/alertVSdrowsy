@@ -96,10 +96,10 @@ def extract_clip(label, path, max_frames, ann=None):
             if max_frames and i >= max_frames:
                 break
             out = vm.process(frame, now=i / fps)   # video-time clock; runs on EVERY frame
-            # lip_gap_level isn't returned directly; recover it as the window max
-            # the model just used (max gap == the MMS "level"). We re-read it from
-            # the model's buffer for a faithful record.
-            level = max(vm._lip_window) if vm._lip_window else 0.0
+            # lip_gap_level isn't returned directly; ask the model for the window
+            # max it just used (max gap == the MMS "level") so this stays a
+            # faithful record without reaching into its buffer layout.
+            level = vm.lip_gap_level()
             frame_i = i
             i += 1
 

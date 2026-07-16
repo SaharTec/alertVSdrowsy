@@ -1,0 +1,121 @@
+[eval] val-b: 11 subjects -> ['12-MaleGlasses', '15-MaleNoGlasses', '20-FemaleNoGlasses', '28-MaleNoGlasses', '38-MaleNoGlasses', '40-FemaleNoGlasses', '41-FemaleGlasses', '41-MaleNoGlasses', '5-FemaleGlasses', '6-FemaleNoGlasses', 'speaking002']
+[eval] 1/31 Yawning/12-MaleGlasses-Yawning.avi
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+W0000 00:00:1784204022.037810     876 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204022.050501    1460 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+E:\sahar\pythonCorss\lib\site-packages\google\protobuf\symbol_database.py:55: UserWarning: SymbolDatabase.GetPrototype() is deprecated. Please use message_factory.GetMessageClass() instead. SymbolDatabase.GetPrototype() will be removed soon.
+  warnings.warn('SymbolDatabase.GetPrototype() is deprecated. Please '
+[eval] 2/31 Yawning/15-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784204028.163514    6596 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204028.174006    1544 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 3/31 Yawning/20-FemaleNoGlasses-Yawning.avi
+W0000 00:00:1784204031.565575   21260 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204031.576335    8424 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 4/31 Yawning/28-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784204036.200435   15544 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204036.211676   11356 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 5/31 Yawning/38-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784204039.134362    3408 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204039.144495   21988 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 6/31 Yawning/40-FemaleNoGlasses-Yawning.avi
+W0000 00:00:1784204041.900910    9772 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204041.912012   19388 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 7/31 Yawning/41-FemaleGlasses-Yawning.avi
+W0000 00:00:1784204045.855201   15480 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204045.866490    8884 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 8/31 Yawning/41-MaleNoGlasses-Yawning.avi
+W0000 00:00:1784204049.430515   12296 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204049.441492   19932 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 9/31 Yawning/5-FemaleGlasses-Yawning.avi
+W0000 00:00:1784204052.972180   10636 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204052.983523    6924 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 10/31 Yawning/6-FemaleNoGlasses-Yawning.avi
+W0000 00:00:1784204057.436369   22076 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204057.448441   22916 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 11/31 Singing/12-MaleGlasses-Talking.avi
+W0000 00:00:1784204060.767026   16396 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204060.778894   20360 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 12/31 Singing/15-MaleNoGlasses-Talking.avi
+W0000 00:00:1784204067.518546   15752 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204067.530512   17044 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 13/31 Singing/20-FemaleNoGlasses-Talking.avi
+W0000 00:00:1784204072.120131   15576 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204072.134998    4332 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 14/31 Singing/28-MaleNoGlasses-Talking.avi
+W0000 00:00:1784204076.460704   11968 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204076.474838    7668 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 15/31 Singing/38-MaleNoGlasses-Talking.avi
+W0000 00:00:1784204082.103103   19404 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204082.116301     520 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 16/31 Singing/40-FemaleNoGlasses-Talking.avi
+W0000 00:00:1784204087.107476   18628 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204087.119109   12172 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 17/31 Singing/41-FemaleGlasses-Talking.avi
+W0000 00:00:1784204092.440052   24336 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204092.450517    8508 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 18/31 Singing/41-MaleNoGlasses-Talking.avi
+W0000 00:00:1784204096.666161   19640 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204096.681750   24648 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 19/31 Singing/5-FemaleGlasses-Talking.avi
+W0000 00:00:1784204103.137787    7776 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204103.149147   18356 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 20/31 Singing/6-FemaleNoGlasses-Talking.avi
+W0000 00:00:1784204109.497783   23060 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204109.508883   15068 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 21/31 Singing/speaking002.mp4
+W0000 00:00:1784204115.477231    6064 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204115.489043   22744 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 22/31 Alert/12-MaleGlasses-Normal.avi
+W0000 00:00:1784204121.360373   11204 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204121.373632    6772 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 23/31 Alert/15-MaleNoGlasses-Normal.avi
+W0000 00:00:1784204125.373941   12104 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204125.385384   19264 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 24/31 Alert/20-FemaleNoGlasses-Normal.avi
+W0000 00:00:1784204129.342773    5580 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204129.353559   11104 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 25/31 Alert/28-MaleNoGlasses-Normal.avi
+W0000 00:00:1784204134.258063   12784 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204134.270644   17492 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 26/31 Alert/38-MaleNoGlasses-Normal.avi
+W0000 00:00:1784204137.647905   25232 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204137.667401   25232 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 27/31 Alert/40-FemaleNoGlasses-Normal.avi
+W0000 00:00:1784204141.610822   23328 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204141.622135   12332 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 28/31 Alert/41-FemaleGlasses-Normal.avi
+W0000 00:00:1784204144.814253    6072 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204144.825812   14632 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 29/31 Alert/41-MaleNoGlasses-Normal.avi
+W0000 00:00:1784204147.916293    4732 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204147.927012   11332 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 30/31 Alert/5-FemaleGlasses-Normal.avi
+W0000 00:00:1784204153.284794   15836 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204153.297748   22836 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+[eval] 31/31 Alert/6-FemaleNoGlasses-Normal.avi
+W0000 00:00:1784204157.500435    4928 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1784204157.512364   16656 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+
+=== run ===
+  commit=709d813  cnn=False  stride=1  subjects=val-b (n=11)
+  thresholds: MAR_YAWN=0.6 YAWN_CNN_PROB=0.5 YAWN_MIN_SECONDS=1.2  learned_thresholds=False
+  audio: silence (Yawning clips have no audio track)
+
+=== Level A - yawn cue events ===
+  clips=31 (pos=10 neg=21) subjects=11
+  event recall            85.7%  (12/14)   95% CI [70.6%, 100.0%]
+  mean IoU                0.394
+  onset latency (s)       median=1.94  IQR=[1.84, 2.07]
+  false yawn events/min   0.000  (over 8.78 min of Singing+Alert)
+
+=== Level B - fused DROWSY ===
+  recall, any cue         92.9%
+  recall, yawn cue only   64.3%
+  neg DROWSY/min by cue   {'eyes': 1.481}
+
+=== health / speed (guard, not a goal) ===
+  face found (mean)       99.7%
+  process() ms p50/p95    5.21 / 7.25
+
+[eval] wrote reports/baseline_rule_valb.json

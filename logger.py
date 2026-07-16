@@ -30,7 +30,7 @@ from debug import dbg
 
 # Column order for the CSV (and key order in each JSONL object).
 _FIELDS = [
-    "timestamp", "epoch", "state", "confidence", "reasons",
+    "timestamp", "epoch", "source", "state", "confidence", "reasons",
     "ear", "mar", "mms_amplitude", "mms_oscillation", "pitch",
     "mouth_state", "audio_state", "drowsy_frac", "alert_frac", "snapshot",
 ]
@@ -38,20 +38,54 @@ _FIELDS = [
 
 class EventLogger:
     def __init__(self, csv_path=LOG_CSV, jsonl_path=LOG_JSONL,
-                 snapshot_dir=SNAPSHOT_DIR, snapshot_on_drowsy=SNAPSHOT_ON_DROWSY):
+                 snapshot_dir=SNAPSHOT_DIR, snapshot_on_drowsy=SNAPSHOT_ON_DROWSY,
+                 source=""):
         self.csv_path = Path(csv_path)
         self.jsonl_path = Path(jsonl_path)
         self.snapshot_dir = Path(snapshot_dir)
         self.snapshot_on_drowsy = snapshot_on_drowsy
+        # Which clip / camera produced these rows. Constant for a run, so a batch
+        # over many clips stays attributable to a clip instead of relying on the
+        # order rows happen to land in the file.
+        self.source = str(source)
         self._last_state = None
 
         # Make sure the folders exist and the CSV has a header.
         self.csv_path.parent.mkdir(parents=True, exist_ok=True)
         self.jsonl_path.parent.mkdir(parents=True, exist_ok=True)
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
+        self._rotate_if_stale_header()
         if not self.csv_path.exists():
             with self.csv_path.open("w", newline="", encoding="utf-8") as f:
                 csv.writer(f).writerow(_FIELDS)
+
+    def _rotate_if_stale_header(self):
+        """Retire a CSV whose header predates the current column set.
+
+        The CSV is append-mode and long-lived, so a file written before a column
+        was added keeps its old header and would silently take rows whose values
+        no longer line up with it - corruption that only surfaces later, when
+        someone reads it back. Rename it aside (never delete: those rows are
+        someone's past run) and let a fresh file be created with today's header.
+        The .jsonl goes with it so the pair keeps describing the same runs.
+        """
+        if not self.csv_path.exists():
+            return
+        try:
+            with self.csv_path.open("r", newline="", encoding="utf-8") as f:
+                header = next(csv.reader(f), None)
+        except OSError:
+            return              # unreadable: leave it alone, the append will report
+        if header is None or header == _FIELDS:
+            return
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        for path in (self.csv_path, self.jsonl_path):
+            if path.exists():
+                backup = path.with_suffix(path.suffix + f".{stamp}.bak")
+                path.rename(backup)
+                print(f"[logger] {path.name} used an older column set "
+                      f"({len(header)} cols, now {len(_FIELDS)}); kept it as "
+                      f"{backup.name} and started a fresh file.")
 
     def _save_snapshot(self, frame, now):
         """Write a JPEG snapshot of `frame`; return its path string (or '')."""
@@ -95,6 +129,7 @@ class EventLogger:
         row = {
             "timestamp": datetime.fromtimestamp(now).isoformat(timespec="milliseconds"),
             "epoch": round(now, 3),
+            "source": self.source,
             "state": fusion_result.state,
             "confidence": fusion_result.confidence,
             "reasons": "; ".join(fusion_result.reasons),

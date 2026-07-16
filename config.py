@@ -94,15 +94,29 @@ EYE_CLOSED_SECONDS = 1.0       # closed continuously this long -> drowsy signal
 # Yawn thresholds (mouth wide open, sustained - NOT brief talking)
 # ===========================================================================
 MAR_YAWN = 0.60                # MAR above this = mouth wide open
-YAWN_MIN_SECONDS = 1.2 
-YAWN_COUNT_REQUIRED = 3
-YAWN_WINDOW_SECONDS = 30.0
-# open this long -> counts as a yawn (vs a word)
+YAWN_MIN_SECONDS = 1.2         # open this long -> counts as a yawn (vs a word)
+# There was a YAWN_COUNT_REQUIRED=3 / YAWN_WINDOW_SECONDS=30 rule here, and a
+# yawn_rule.py implementing it, but nothing ever imported either: the sustained
+# YAWN_MIN_SECONDS test above is the whole yawn gate. Both are deleted rather
+# than wired up, because the annotations say the rule would be a disaster on this
+# data - clips run a median of 17.2 s, only 2 of 117 reach 30 s, and only 3 of 117
+# contain 3 yawns, so "3 yawns within 30 s" could fire on at most ~3 clips and
+# would drop yawn event recall from ~100% to roughly 3%. One real yawn is a real
+# yawn; the event-level false-alarm rate is controlled by YAWN_CNN_PROB instead
+# (see train/eval_events.py).
 # Optional trained-CNN yawn cue (opt-in via VideoModel(use_cnn=True) / --use-cnn).
 # When enabled, the per-frame "mouth is yawning" test becomes P(yawn) >= this
 # (from train/yawn_cnn.pt) instead of MAR >= MAR_YAWN. The sustained-duration
 # rule (YAWN_MIN_SECONDS) and everything downstream are unchanged.
-YAWN_CNN_PROB = 0.50           # CNN P(yawn) above this = mouth wide open (yawn shape)
+# 0.83, not the 0.50 that argmax implies: the CNN was trained with class-weighted
+# cross-entropy on 9:1 data, so 0.50 is not where the classes balance. Chosen on
+# held-out subject half A (frame F1 and the event-level sweep both peak there) and
+# confirmed on the disjoint half B: yawn event recall stayed at 100% while false
+# yawn events fell 2.278 -> 0.911 per minute of talking. Recall is flat from 0.50
+# to 0.90 - a real yawn clears any of these thresholds for YAWN_MIN_SECONDS, so
+# the precision is close to free. Re-check with:
+#   python train/eval_events.py --subjects val-b --use-cnn
+YAWN_CNN_PROB = 0.83           # CNN P(yawn) above this = mouth wide open (yawn shape)
 
 # ===========================================================================
 # Head-nod (drooping) detection
@@ -140,15 +154,30 @@ YAW_FACING_ROAD = 0.35         # |yaw| below this = looking ahead
 # Speech  -> small amplitude + high oscillation (rhythmic chatter).
 # Yawning -> large amplitude + low oscillation (one slow wide opening).
 # ===========================================================================
-MMS_WINDOW_FRAMES = 15         # ~0.5 s at 30 fps - one window of lip motion
+# The window is measured in SECONDS, not frames. It used to be 15 frames, which
+# is 0.5 s only if you happen to be running at 30 fps: the same clip at 25 fps got
+# a 0.6 s window, and live it stretched with whatever frame rate the machine
+# achieved. A discriminator whose time span depends on the hardware cannot be
+# reproduced or defended, so the span is now stated directly.
+MMS_WINDOW_SECONDS = 0.5       # one window of lip motion
 # Calibrated from real YawDD clips (scratchpad/mms_probe): a yawn's inner-lip
 # gap reaches a LEVEL of ~0.5-0.8, singing ~0.42, talking ~0.02. The "level"
 # (how wide the mouth got) is the reliable yawn cue; the sign-change count is a
 # weak speech cue on this data, so it only labels low-amplitude busy motion.
 MMS_YAWN_LEVEL = 0.30          # window-max gap above this = a wide (yawn) opening
 MMS_SPEECH_AMP_MAX = 0.18      # speech stays below this travel amplitude
-MMS_SPEECH_OSC_MIN = 2         # speech has at least this many sign-changes/window
+# A RATE, not a count. The old "at least 2 sign-changes per window" compared a
+# count against a fixed number while the number of samples in the window scaled
+# with frame rate (12 samples at 25 fps vs 15 at 30 fps), so the same mouth
+# motion cleared the bar at one frame rate and not another. 2 per 0.5 s window
+# = 4.0 per second, so this is the old threshold restated in units that hold.
+MMS_SPEECH_OSC_RATE_MIN = 4.0  # speech: at least this many sign-changes per second
 MMS_YAWN_AMP_MIN = 0.25        # (kept for reference) large travel also = yawn
+# KNOWN REMAINING FRAME-RATE COUPLING: this gates |gap change per FRAME|, so at a
+# lower frame rate more motion lands in each step and passes the gate. Converting
+# it to a per-second velocity would rescale it ~30x and invalidate the empirical
+# calibration above, so it is left alone deliberately - one change at a time, each
+# measured. See train/eval_events.py's fps-stratified recall for whether it bites.
 MMS_MOTION_EPS = 0.02          # |velocity| below this is jitter, not motion
 
 # ===========================================================================
